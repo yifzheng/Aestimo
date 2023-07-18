@@ -2,7 +2,7 @@ import React from 'react'
 
 function Register () {
     return (
-        <div className='formContainer'>
+        <div className='formContainer background-fit'>
             <div className="formWrapper">
                 <span className='logo'>Aestimo</span>
                 <span className='appDesc'>Sign up to see and rate photos from your friends</span>

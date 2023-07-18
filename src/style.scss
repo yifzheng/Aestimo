@@ -25,6 +25,22 @@ body {
 	background-color: $powder-blue;
 }
 
+.app-border {
+	width: 30%;
+	height: 95%;
+	border: 3px solid $mountain-pink;
+	border-radius: 10px;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.y-overflow {
+	overflow-y: scroll;
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+}
+
 .formContainer {
 	.formWrapper {
 		border: 2px solid $mountain-pink;
@@ -91,51 +107,43 @@ body {
 	}
 }
 
+.navbarContainer {
+	display: flex;
+	justify-content: space-between;
+	padding: 20px;
+	height: 30px;
+	background-color: $glaucous;
+	border-bottom: 2px solid $mountain-pink;
+
+	.logoContainer {
+		display: flex;
+		gap: 10px;
+		align-items: center;
+		color: white;
+		font-size: 40px;
+		cursor: pointer;
+		img {
+			width: 44px;
+		}
+	}
+
+	.userContainer {
+		display: flex;
+		gap: 10px;
+		align-items: center;
+		color: white;
+		font-size: 24px;
+		img {
+			width: 42px;
+			border: 1px solid $mountain-pink;
+			border-radius: 50%;
+			background-color: azure;
+		}
+	}
+}
+
 .homepage {
 	.homeContainer {
-		width: 30%;
-		height: 95%;
-		border: 3px solid $mountain-pink;
-		border-radius: 10px;
-		display: flex;
-		flex-direction: column;
-		overflow: hidden;
-
-		.navbarContainer {
-			display: flex;
-			justify-content: space-between;
-			padding: 20px;
-			height: 30px;
-			background-color: $glaucous;
-			border-bottom: 2px solid $mountain-pink;
-
-			.logoContainer {
-				display: flex;
-				gap: 10px;
-				align-items: center;
-				color: white;
-				font-size: 40px;
-				cursor: pointer;
-				img {
-					width: 44px;
-				}
-			}
-
-			.userContainer {
-				display: flex;
-				gap: 10px;
-				align-items: center;
-				color: white;
-				font-size: 24px;
-				img {
-					width: 42px;
-					border: 1px solid $mountain-pink;
-					border-radius: 50%;
-					background-color: azure;
-				}
-			}
-		}
-
 		.displayContainer {
 			background-color: $glaucous;
 			height: calc(100% - 140px);
@@ -277,24 +285,121 @@ body {
 		.displayContainer::-webkit-scrollbar {
 			display: none; /* hide scroll bar */
 		}
+	}
+}
 
-		.menu {
-			display: flex;
-			flex-direction: row;
-			justify-content: space-evenly;
-			background-color: $mountain-pink;
-			height: 70px;
-			align-items: center;
-			input {
-				display: none;
-			}
+.line-break {
+	border: 1px solid black;
+	height: 0px;
+}
+.createPost {
+	background-color: $glaucous;
+	height: calc(100% - 140px);
+	padding: 5px 40px 10px 40px;
 
-			label {
-				cursor: pointer;
-				img {
-					width: 36px;
-				}
-			}
+	.createOptions {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		font-weight: 800;
+		font-size: 22px;
+		padding: 0px 0px 15px 0px;
+		.negative {
+			color: maroon;
+		}
+		.positive {
+			color: rgb(23, 96, 23);
+		}
+		span {
+			cursor: pointer;
+		}
+	}
+	.createImage {
+		width: 100%;
+		img {
+			width: 100%;
+			min-width: 150px;
+			min-height: 150px;
+			max-height: 350px;
+			background-color: azure;
+			border-radius: 10px;
+		}
+		button {
+			width: 100%;
+			max-height: 30px;
+			padding: 5px;
+			border: none;
+			border-radius: 5px;
+			background-color: $tiffany-blue;
+			color: white;
+			font-size: 14px;
+			font-weight: 500;
+			cursor: pointer;
+		}
+	}
+	.createCaption {
+		fieldset {
+			border-color: $tiffany-blue;
+		}
+		legend {
+			font-size: 18px;
+			font-weight: 600;
+			color: white;
+		}
+		textarea {
+			height: 100%;
+			width: 100%;
+			-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+			-moz-box-sizing: border-box; /* Firefox, other Gecko */
+			box-sizing: border-box; /* Opera/IE 8+ */
+			outline: none;
+			border: none;
+			border-radius: 5px;
+			padding: 10px;
+			color: $charcoal;
+			font-size: 16px;
+			font-weight: 500;
+		}
+	}
+	span {
+		font-size: 22px;
+		font-weight: 700;
+		color: white;
+		margin-top: 10px;
+	}
+	.createRecents {
+		display: grid;
+		margin-top: 10px;
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+
+		img {
+			width: 99%;
+			border: 1px solid $mountain-pink;
+			cursor: pointer;
+		}
+	}
+}
+
+.createPost::-webkit-scrollbar {
+	display: none;
+}
+
+.menu {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	background-color: $mountain-pink;
+	height: 70px;
+	align-items: center;
+	input {
+		display: none;
+	}
+
+	label {
+		cursor: pointer;
+		img {
+			width: 36px;
 		}
 	}
 }

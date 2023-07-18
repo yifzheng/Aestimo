@@ -9,7 +9,7 @@ function SearchDisplay () {
     return (
         <div className='searchContainer'>
             <div className="searchBar">
-                <input type="text" placeholder='Search' />
+                <input type="text" placeholder='Search' value=""/>
             </div>
             { results && <div className="searchResults">
                 <ResultCard />

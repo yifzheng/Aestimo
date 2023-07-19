@@ -1,16 +1,18 @@
 import React from 'react'
 import Navbar from '../components/Navbar'
 import Man from "../assets/man.png"
+import { useNavigate } from 'react-router-dom'
 
 const EditProfile = () => {
+    const navigate = useNavigate();
     return (
         <div className='home background-fit'>
             <div className="container app-border">
                 <div className="editProfileContainer">
                     <div className="header">
-                        <span className='negative'>Close</span>
+                        <span className='negative' onClick={ () => navigate( "/profile" )}>Close</span>
                         <span>Edit Profile</span>
-                        <span className='positive'>Save</span>
+                        <span className='positive' onClick={ () => navigate( "/profile" )}>Save</span>
                     </div>
                     <br />
                     <div className="line-break"></div>

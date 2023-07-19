@@ -3,8 +3,11 @@ import Logo from "../../public/film-roll.png"
 import Man from "../assets/man.png"
 import Exit from "../assets/exit.png"
 import Edit from "../assets/edit.png"
+import { useNavigate } from 'react-router-dom'
 
 function Navbar ( { componentName } ) {
+    const navigate = useNavigate();
+
     return (
         <div className="navbarContainer">
             { componentName === "Navbar" && <>
@@ -22,8 +25,8 @@ function Navbar ( { componentName } ) {
                     <span className='user-name'>JohnTheDoe</span>
                 </div>
                 <div className="profileMenu">
-                    <img src={ Edit } alt="" />
-                    <img src={ Exit } alt="" />
+                    <img src={ Edit } alt="" onClick={ () => navigate( "/edit_profile" )}/>
+                    <img src={ Exit } alt="" onClick={ () => navigate( "/login" )}/>
                 </div>
             </> }
         </div>

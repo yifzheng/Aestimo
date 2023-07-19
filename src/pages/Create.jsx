@@ -3,16 +3,19 @@ import Navbar from '../components/Navbar'
 import Menu from '../components/Menu'
 import Image from "../assets/image.png"
 import Lily from "../assets/orange-lily.jpg"
+import { useNavigate } from 'react-router-dom'
 
 function Create () {
+    const navigate = useNavigate();
+
     return (
         <div className='create background-fit'>
             <div className="createContainer app-border">
                 <Navbar componentName={ "Navbar" } />
                 <div className="createPost y-overflow">
                     <div className="createOptions">
-                        <span className='negative'>Cancel</span>
-                        <span className='positive'>Post</span>
+                        <span className='negative' onClick={ () => navigate( "/" ) }>Cancel</span>
+                        <span className='positive' onClick={ () => navigate( "/" )}>Post</span>
                     </div>
                     <div className="createImage">
                         <img src={ Image } alt="" />

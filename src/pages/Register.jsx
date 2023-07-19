@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 function Register () {
     return (
@@ -15,7 +16,7 @@ function Register () {
                     <span className='disclosure'>By signing up, you consent to the collection of the above information in our database</span>
                     <button>Sign up</button>
                 </form>
-                <p>Have an account? Log in</p>
+                <p>Have an account? <Link to={ "/login" }>Log in</Link></p>
             </div>
         </div>
     )

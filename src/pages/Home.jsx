@@ -6,9 +6,9 @@ import ImageCard from '../components/ImageCard'
 
 function Home () {
     return (
-        <div className='homepage background-fit'>
-            <div className="homeContainer app-border">
-                <Navbar />
+        <div className='page background-fit'>
+            <div className="container app-border">
+                <Navbar componentName={ "Navbar" } />
                 <Display componentName="ImageCard" />
                 <Menu />
             </div>

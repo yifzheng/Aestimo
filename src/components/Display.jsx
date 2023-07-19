@@ -1,6 +1,7 @@
 import React from 'react'
 import ImageCard from './ImageCard'
 import SearchDisplay from './SearchDisplay'
+import ProfileDisplay from './ProfileDisplay'
 
 function Display ( { componentName } ) {
 
@@ -22,6 +23,9 @@ function Display ( { componentName } ) {
             </div> }
             { componentName === "SearchDisplay" && <div className='searchWrapper'>
                 <SearchDisplay />
+            </div> }
+            { componentName === "Profile" && <div className='profileWrapper'>
+                <ProfileDisplay />
             </div> }
         </div>
     )

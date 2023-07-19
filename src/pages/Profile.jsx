@@ -1,18 +1,18 @@
 import React from 'react'
-import Navbar from '../components/Navbar'
 import Menu from '../components/Menu'
+import Navbar from '../components/Navbar'
 import Display from '../components/Display'
 
-function Search () {
+function Profile () {
     return (
         <div className='page background-fit'>
             <div className="container app-border">
-                <Navbar componentName={ "Navbar" } />
-                <Display componentName="SearchDisplay" />
+                <Navbar componentName={ "Profile" } />
+                <Display componentName={ "Profile" } />
                 <Menu />
             </div>
         </div>
     )
 }
 
-export default Search
+export default Profile

@@ -8,7 +8,7 @@ function Create () {
     return (
         <div className='create background-fit'>
             <div className="createContainer app-border">
-                <Navbar />
+                <Navbar componentName={ "Navbar" } />
                 <div className="createPost y-overflow">
                     <div className="createOptions">
                         <span className='negative'>Cancel</span>
@@ -28,6 +28,7 @@ function Create () {
                     </div>
                     <br />
                     <div className="line-break"></div>
+                    <br />
                     <span>Recents</span>
                     <div className="createRecents">
                         <img src={ Lily } alt="" />

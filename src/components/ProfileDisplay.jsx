@@ -3,12 +3,15 @@ import Man from "../assets/man.png"
 import Feed from "../assets/feed.png"
 import Saved from "../assets/save.png"
 import Lily from "../assets/orange-lily.jpg"
+import Follow from "../assets/follow.png"
+import Following from "../assets/following.png"
 import { useNavigate } from 'react-router-dom'
 
 
 const ProfileDisplay = () => {
     const navigate = useNavigate();
     const saved = false;
+    const following = false;
     return (
         <div className='profileContainer'>
             <div className="profile">
@@ -33,6 +36,8 @@ const ProfileDisplay = () => {
                     <span>John Doe</span>
                     <span className='description'>I am unicorn rider from the world of Neo Narnia. I have lived for 1,500 years on this planet.</span>
                 </div>
+                <br />
+                <label><img src={ following ? Following : Follow } alt="" /></label>
                 <br />
                 <div className="line-break"></div>
                 <br />

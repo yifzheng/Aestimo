@@ -7,6 +7,7 @@ import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import Search from "./pages/Search";
 import ViewPost from "./pages/ViewPost";
+import Explore from "./pages/Explore";
 
 
 function App () {
@@ -23,6 +24,7 @@ function App () {
           <Route path="profile" element={ <Profile /> } />
           <Route path="edit_profile" element={ <EditProfile /> } />
           <Route path="/view_post" element={ <ViewPost /> } />
+          <Route path="/explore" element={ <Explore /> } />
         </Route>
       </Routes>
     </BrowserRouter>

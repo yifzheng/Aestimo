@@ -253,7 +253,11 @@ body {
 				gap: 5px;
 
 				.searchBar {
-					padding: 5px 5px 0px 5px;
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					gap: 10px;
+					padding: 5px 10px 0px 5px;
 					input {
 						width: 97%;
 						height: 35px;
@@ -267,6 +271,15 @@ body {
 						font-weight: 500;
 						&::placeholder {
 							color: azure;
+						}
+					}
+					span {
+						font-weight: 600;
+						font-size: 18px;
+						color: $charcoal;
+						cursor: pointer;
+						&:hover {
+							color: white;
 						}
 					}
 				}
@@ -382,10 +395,12 @@ body {
 		.feed {
 			width: 50%;
 			text-align: center;
+			padding: 5px 0px 5px 0px;
 		}
 		.saved {
 			width: 50%;
 			text-align: center;
+			padding: 5px 0px 5px 0px;
 		}
 	}
 	.userPosts {
@@ -603,7 +618,7 @@ body {
 }
 
 // POST VIEW: NAVBAR
-.post-nav {
+.nav {
 	padding: 20px;
 	height: 30px;
 	background-color: $glaucous;
@@ -617,7 +632,7 @@ body {
 		cursor: pointer;
 		justify-self: start;
 	}
-	.post-title {
+	.title {
 		display: flex;
 		flex-direction: column;
 		font-size: 18px;

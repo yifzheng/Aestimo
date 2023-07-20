@@ -10,9 +10,9 @@ const ViewPost = () => {
     return (
         <div className='page background-fit'>
             <div className="container app-border">
-                <div className='post-nav'>
+                <div className='nav'>
                     <img src={ Back } alt="" onClick={ () => navigate( -1 ) } />
-                    <div className="post-title">
+                    <div className="title">
                         <span className='user-name'>JohnTheDoe</span>
                         <span className='post'>Posts</span>
                     </div>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Man from "../assets/man.png"
 import Feed from "../assets/feed.png"
 import Saved from "../assets/save.png"
@@ -9,9 +9,14 @@ import { useNavigate } from 'react-router-dom'
 
 
 const ProfileDisplay = () => {
+    const [ following, setFollowing ] = useState( false );
     const navigate = useNavigate();
-    const saved = false;
-    const following = false;
+    let saved = false;
+    //<-------- info used to test app functionality -------->
+    const userUID = 1234;
+    const profileUID = 12324;
+    // <--------------------------------------------------->
+
     return (
         <div className='profileContainer'>
             <div className="profile">
@@ -36,15 +41,15 @@ const ProfileDisplay = () => {
                     <span>John Doe</span>
                     <span className='description'>I am unicorn rider from the world of Neo Narnia. I have lived for 1,500 years on this planet.</span>
                 </div>
-                <br />
-                <label><img src={ following ? Following : Follow } alt="" /></label>
+                { profileUID !== userUID && <br /> }
+                { profileUID !== userUID && <label><img src={ following ? Following : Follow } alt="" onClick={ () => setFollowing( !following ) } /></label> }
                 <br />
                 <div className="line-break"></div>
                 <br />
                 <div className="feed">
                     <div className="icons">
                         <div className='feed' ><img src={ Feed } alt="" /></div>
-                        <div className='saved'><img src={ Saved } alt="" /></div>
+                        <div className='saved' ><img src={ Saved } alt="" /></div>
                     </div>
                     { !saved && <div className="userPosts">
                         <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />

@@ -12,7 +12,7 @@ function ImageCard () {
                 <img src={ Man } alt='' />
                 <div className='info'>
                     <span>John Doe</span>
-                    <span>Your Imagination</span>
+                    <span className='location'>Your Imagination</span>
                 </div>
             </div>
             <div className="cardWrapper">

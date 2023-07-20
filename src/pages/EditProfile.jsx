@@ -29,7 +29,7 @@ const EditProfile = () => {
                             <label><span>First Name</span> <input type="text" value={ "John" } /></label>
                             <label><span>Last Name</span> <input type="text" value={ "Doe" } /></label>
                             <label><span>Username</span> <input type="text" value={ "JohnTheDoe" } /></label>
-                            <label><span>Bio</span> <textarea rows={10} value={ "John Doe" } /></label>
+                            <label><span>Bio</span> <textarea rows={10} /></label>
                         </form>
                     </div>
                 </div>

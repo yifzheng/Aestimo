@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import Search from "./pages/Search";
+import ViewPost from "./pages/ViewPost";
 
 
 function App () {
@@ -21,6 +22,7 @@ function App () {
           <Route path="search" element={ <Search /> } />
           <Route path="profile" element={ <Profile /> } />
           <Route path="edit_profile" element={ <EditProfile /> } />
+          <Route path="/view_post" element={ <ViewPost /> } />
         </Route>
       </Routes>
     </BrowserRouter>

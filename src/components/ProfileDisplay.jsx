@@ -3,12 +3,11 @@ import Man from "../assets/man.png"
 import Feed from "../assets/feed.png"
 import Saved from "../assets/save.png"
 import Lily from "../assets/orange-lily.jpg"
+import { useNavigate } from 'react-router-dom'
 
-const mountainPink = {
-    backgroundColor: "#9e788f"
-}
 
 const ProfileDisplay = () => {
+    const navigate = useNavigate();
     const saved = false;
     return (
         <div className='profileContainer'>
@@ -40,32 +39,28 @@ const ProfileDisplay = () => {
                 <div className="feed">
                     <div className="icons">
                         <div className='feed' ><img src={ Feed } alt="" /></div>
-                    <div className='saved'><img src={ Saved } alt="" /></div>
+                        <div className='saved'><img src={ Saved } alt="" /></div>
+                    </div>
+                    { !saved && <div className="userPosts">
+                        <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
+                        <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
+                        <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
+                        <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
+                        <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
+                        <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
+                        <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
+                        <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
+                        <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
+                        <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
+                    </div> }
+                    { saved && <div className="userPosts">
+                        <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
+                        <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
+                        <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
+                        <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
+                    </div> }
                 </div>
-                { !saved && <div className="userPosts">
-                    <img src={ Lily } alt="" />
-                    <img src={ Lily } alt="" />
-                    <img src={ Lily } alt="" />
-                    <img src={ Lily } alt="" />
-                    <img src={ Lily } alt="" />
-                    <img src={ Lily } alt="" />
-                    <img src={ Lily } alt="" />
-                    <img src={ Lily } alt="" />
-                    <img src={ Lily } alt="" />
-                    <img src={ Lily } alt="" />
-                    <img src={ Lily } alt="" />
-                    <img src={ Lily } alt="" />
-                    <img src={ Lily } alt="" />
-                </div> }
-                { saved && <div className="userPosts">
-                    <img src={ Lily } alt="" />
-                    <img src={ Lily } alt="" />
-                    <img src={ Lily } alt="" />
-                    <img src={ Lily } alt="" />
-                    <img src={ Lily } alt="" />
-                </div> }
             </div>
-        </div>
         </div >
     )
 }

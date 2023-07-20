@@ -5,7 +5,7 @@ function Login () {
     return (
         <div className='formContainer background-fit'>
             <div className="formWrapper">
-                <span className='logo'>Aestimo</span>
+                <span className='logo'>Aestimogram</span>
                 <form action="">
                     <input type="email" name="email" id="email" placeholder='Email' />
                     <input type="password" name="password" id="password" placeholder='Password' />

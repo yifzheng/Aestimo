@@ -13,7 +13,7 @@ function Navbar ( { componentName } ) {
             { componentName === "Navbar" && <>
                 <div className="logoContainer">
                     <img src={ Logo } alt='' />
-                    <span className='logo-name'>Aestimo</span>
+                    <span className='logo-name'>Aestimogram</span>
                 </div>
                 {/* <div className="userContainer">
                     <img src={ Man } alt='' />

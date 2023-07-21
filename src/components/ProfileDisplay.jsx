@@ -46,7 +46,10 @@ const ProfileDisplay = () => {
         <div className='profileContainer'>
             <div className="profile">
                 <div className="profileInfo">
-                    <img src={ profileData.photoUrl ? profileData.photoUrl : Blank } alt="" />
+                    <div className="imgContainer">
+                        <img src={ profileData.photoURL ? profileData.photoURL : Blank } alt="" />
+                    </div>
+
                     <div className="profileData">
                         <div className="data">
                             <span>{ Object.entries( posts ).length }</span>

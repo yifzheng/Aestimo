@@ -13,11 +13,12 @@ function Navbar ( { componentName } ) {
 
     // get current user from context
     const { currentUser } = useContext( AuthContext );
-    console.log( currentUser )
+
     const handleLogOut = () => {
         navigate( "/login" ) // navigate to login page to preserve url
         auth.signOut();// signout
     }
+
     return (
         <div className="navbarContainer">
             { componentName === "Navbar" && <>

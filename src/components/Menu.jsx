@@ -5,10 +5,17 @@ import Account from "../assets/account.png"
 import Home from "../assets/home.png"
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
+import { ProfileStore } from "../context/ProfileStore"
 
 function Menu () {
     const navigate = useNavigate();
     const { currentUser } = useContext( AuthContext )
+    const setProfileID = ProfileStore( ( state ) => state.setProfileID )
+
+    const handleAccount = () => {
+        setProfileID( currentUser.id )
+        navigate( "/profile" )
+    }
     return (
         <div className='menu'>
             <input type="button" id="home" />
@@ -25,7 +32,7 @@ function Menu () {
             </label>
             <input type="button" id="Account" />
             <label htmlFor="Account">
-                <img src={ Account } alt="" onClick={ () => navigate( `/profile/${currentUser.id}` ) } />
+                <img src={ Account } alt="" onClick={ handleAccount } />
             </label>
         </div>
     )

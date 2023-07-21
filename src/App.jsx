@@ -35,7 +35,6 @@ function App () {
           <Route path="create" element={ <ProtectedRoute><Create /></ProtectedRoute> } />
           <Route path="search" element={ <ProtectedRoute><Search /></ProtectedRoute> } />
           <Route path="profile" element={ <ProtectedRoute><Profile /></ProtectedRoute> } />
-          <Route path="profile/:id" element={ <ProtectedRoute><Profile /></ProtectedRoute> } />
           <Route path="edit_profile" element={ <ProtectedRoute><EditProfile /></ProtectedRoute> } />
           <Route path="/view_post" element={ <ProtectedRoute><ViewPost /></ProtectedRoute> } />
           <Route path="/explore" element={ <ProtectedRoute><Explore /></ProtectedRoute> } />

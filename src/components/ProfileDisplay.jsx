@@ -5,19 +5,21 @@ import Saved from "../assets/save.png"
 import Lily from "../assets/orange-lily.jpg"
 import Follow from "../assets/follow.png"
 import Following from "../assets/following.png"
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
 import { doc, getDoc } from 'firebase/firestore'
 import { db } from '../firebase'
+import { ProfileStore } from "../context/ProfileStore"
 
 
 const ProfileDisplay = () => {
-    const [ profileUser, setProfileUser ] = useState( {} )
     const [ posts, setPosts ] = useState( {} )
     const [ following, setFollowing ] = useState( false );
     const navigate = useNavigate();
     // get id from parameters if exist
-    const { id } = useParams();
+    const profileID = ProfileStore( ( state ) => state.profileID );
+    const setProfileData = ProfileStore( ( state ) => state.setProfileData )
+    const profileData = ProfileStore( ( state ) => state.profileData )
 
     // get current user by context
     const { currentUser } = useContext( AuthContext )
@@ -26,25 +28,25 @@ const ProfileDisplay = () => {
 
     useEffect( () => {
         const fetchUser = async () => {
-            const res = await getDoc( doc( db, "users", id ) )
-            console.log( res.data() )
-            setProfileUser( res.data() )
+            const res = await getDoc( doc( db, "users", profileID ) )
+            setProfileData( res.data() )
         }
         const fetchPost = async () => {
-            const res = await getDoc( doc( db, "posts", id ) );
+            const res = await getDoc( doc( db, "posts", profileID ) );
             setPosts( res.data() )
         }
         // clean up
         return () => {
             fetchUser()
+            fetchPost()
         }
-    }, [ id ] )
+    }, [ profileID, setProfileData ] )
 
     return (
         <div className='profileContainer'>
             <div className="profile">
                 <div className="profileInfo">
-                    <img src={ profileUser.photoUrl ? profileUser.photoUrl : Blank } alt="" />
+                    <img src={ profileData.photoUrl ? profileData.photoUrl : Blank } alt="" />
                     <div className="profileData">
                         <div className="data">
                             <span>{ Object.entries( posts ).length }</span>
@@ -61,11 +63,11 @@ const ProfileDisplay = () => {
                     </div>
                 </div>
                 <div className="profileBio">
-                    <span>{ `${profileUser.firstName} ${profileUser.lastName}` }</span>
-                    <span className='description'>{ profileUser.caption }</span>
+                    <span>{ `${profileData.firstName} ${profileData.lastName}` }</span>
+                    <span className='description'>{ profileData.caption }</span>
                 </div>
-                { id !== currentUser.id && <br /> }
-                { id !== currentUser.id && <label><img src={ following ? Following : Follow } alt="" onClick={ () => setFollowing( !following ) } /></label> }
+                { profileID !== currentUser.id && <br /> }
+                { profileID !== currentUser.id && <label><img src={ following ? Following : Follow } alt="" onClick={ () => setFollowing( !following ) } /></label> }
                 <br />
                 <div className="line-break"></div>
                 <br />
@@ -75,17 +77,7 @@ const ProfileDisplay = () => {
                         <div className='saved'><img src={ Saved } alt="" /></div>
                     </div>
                     { !saved && <div className="userPosts">
-                        { Object.entries( posts ).map( ( id ) => ( <img key={ id } src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } /> ) ) }
-
-                        {/* <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
-                        <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
-                        <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
-                        <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
-                        <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
-                        <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
-                        <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
-                        <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
-                        <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } /> */}
+                        { Object.entries( posts ).map( ( id, photoURL ) => ( <img key={ id } src={ photoURL } alt="" onClick={ () => navigate( "/view_post" ) } /> ) ) }
                     </div> }
                     { saved && <div className="userPosts">
                         <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />

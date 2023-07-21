@@ -16,6 +16,7 @@ function Menu () {
         setProfileID( currentUser.id )
         navigate( "/profile" )
     }
+
     return (
         <div className='menu'>
             <input type="button" id="home" />

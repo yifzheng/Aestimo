@@ -7,20 +7,21 @@ import Follow from "../assets/follow.png"
 import Following from "../assets/following.png"
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
-import { doc, getDoc } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, onSnapshot, query, where } from 'firebase/firestore'
 import { db } from '../firebase'
 import { ProfileStore } from "../context/ProfileStore"
+import { PostStore } from '../context/PostStore'
 
 
 const ProfileDisplay = () => {
-    const [ posts, setPosts ] = useState( {} )
+    const [ posts, setPosts ] = useState( [] )
     const [ following, setFollowing ] = useState( false );
     const navigate = useNavigate();
     // get id from parameters if exist
     const profileID = ProfileStore( ( state ) => state.profileID );
     const setProfileData = ProfileStore( ( state ) => state.setProfileData )
     const profileData = ProfileStore( ( state ) => state.profileData )
-
+    const setPost = PostStore( ( state ) => state.setPost )
     // get current user by context
     const { currentUser } = useContext( AuthContext )
 
@@ -31,14 +32,21 @@ const ProfileDisplay = () => {
             const res = await getDoc( doc( db, "users", profileID ) )
             setProfileData( res.data() )
         }
-        const fetchPost = async () => {
-            const res = await getDoc( doc( db, "posts", profileID ) );
-            setPosts( res.data() )
-        }
+        const q = query( collection( db, "posts" ), where( 'ownerID', "==", profileID ) )
+        /* const unsub = onSnapshot( q, ( querySnapshot ) => {
+            const posts = []
+            querySnapshot.forEach( ( doc ) => {
+                posts.push( doc.data() )
+            } )
+            setPosts( posts )
+        } ) */
+        getDocs( q ).then( ( querySnapShot ) => {
+            const documents = querySnapShot.docs.map( ( doc ) => doc.data() )
+            setPosts( documents )
+        } )
         // clean up
         return () => {
             fetchUser()
-            fetchPost()
         }
     }, [ profileID, setProfileData ] )
 
@@ -52,7 +60,7 @@ const ProfileDisplay = () => {
 
                     <div className="profileData">
                         <div className="data">
-                            <span>{ Object.entries( posts ).length }</span>
+                            <span>{ posts.length }</span>
                             <span>Posts</span>
                         </div>
                         <div className="data">
@@ -80,7 +88,7 @@ const ProfileDisplay = () => {
                         <div className='saved'><img src={ Saved } alt="" /></div>
                     </div>
                     { !saved && <div className="userPosts">
-                        { Object.entries( posts ).map( ( id, photoURL ) => ( <img key={ id } src={ photoURL } alt="" onClick={ () => navigate( "/view_post" ) } /> ) ) }
+                        { posts.length > 0 && posts.map( ( doc ) => ( <img key={ doc.uid } src={ doc.photoURL } alt="" onClick={ () => navigate( "/view_post", { state: doc } ) } /> ) ) }
                     </div> }
                     { saved && <div className="userPosts">
                         <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />

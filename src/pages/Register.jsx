@@ -1,31 +1,58 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '../firebase'
+import { Link, useNavigate } from 'react-router-dom'
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { auth, db } from '../firebase'
+import { doc, setDoc } from 'firebase/firestore'
 
 function Register () {
     const [ err, setErr ] = useState( false )
+    const navigate = useNavigate();
+
+    const capitalizeWord = ( word ) => word.charAt( 0 ).toUpperCase() + word.slice( 1 )
 
     // submission of registration form
     const handleSubmit = async ( e ) => {
         e.preventDefault(); // prevents window from reloading
-        const userName = e.target[ 0 ].value;
-        const firstName = e.target[ 1 ].value;
-        const lastName = e.target[ 2 ].value;
+        const userName = e.target[ 0 ].value; // username fild
+        const firstName = capitalizeWord( e.target[ 1 ].value ); // capitalize first letter of name in case user did not
+        const lastName = capitalizeWord( e.target[ 2 ].value ); // capitalize first letter of name in case user did not
         const email = e.target[ 3 ].value;
         const password = e.target[ 4 ].value;
         console.log( "email: ", email )
         console.log( "password: ", password )
         try {
             // create a new user with email and password
-            const res = await createUserWithEmailAndPassword(auth, email, password );
-            console.log( res.user )
-            //const userUID = res.user.uid; // retrieve the user uid as id for other collections
+            const res = await createUserWithEmailAndPassword( auth, email, password );
+            // update auth user information
+            await updateProfile( auth.currentUser, {
+                displayName: userName
+            } )
+            const userUID = res.user.uid; // retrieve the user uid as id for other collections
 
             // create a new user document
+            await setDoc( doc( db, "users", userUID ), {
+                id: userUID,
+                firstName,
+                lastName,
+                userName,
+                email,
+                caption: "",
+                photoURL: null,
+            } )
+            // create empty posts collection
+            await setDoc( doc( db, "posts", userUID ), {} )
+            // create empty collection to store posts saved by user
+            await setDoc( doc( db, "saved", userUID ), {} )
+            // create empty collection to store users following a currentUser
+            await setDoc( doc( db, "followers", userUID ), {} )
+            // create empty colection to store users that currentUser is following
+            await setDoc( doc( db, "following", userUID ), {} )
+            // if we successfully accomplish above, we navigate to home page
+            navigate( "/home" )
         } catch ( error ) {
             console.log( error )
             setErr( true )
+            e.target[ 4 ].value = ""; // reset password field if there is an error
         }
     }
 
@@ -43,7 +70,7 @@ function Register () {
                     <input type="password" name="password" id="password" placeholder='Password' required minLength={ 8 } />
                     <span className='disclosure'>By signing up, you consent to the collection of the above information in our database</span>
                     <button>Sign up</button>
-                    { err && <span className='email-error'>Something went wrong</span> }
+                    { err && <span className='error'>Something went wrong</span> }
                 </form>
                 <p>Have an account? <Link to={ "/login" }>Log in</Link></p>
             </div>

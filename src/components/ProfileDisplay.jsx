@@ -1,30 +1,53 @@
-import React, { useState } from 'react'
-import Man from "../assets/man.png"
+import React, { useContext, useEffect, useState } from 'react'
+import Blank from "../assets/blank.png"
 import Feed from "../assets/feed.png"
 import Saved from "../assets/save.png"
 import Lily from "../assets/orange-lily.jpg"
 import Follow from "../assets/follow.png"
 import Following from "../assets/following.png"
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import { AuthContext } from '../context/AuthContext'
+import { doc, getDoc } from 'firebase/firestore'
+import { db } from '../firebase'
 
 
 const ProfileDisplay = () => {
+    const [ profileUser, setProfileUser ] = useState( {} )
+    const [ posts, setPosts ] = useState( {} )
     const [ following, setFollowing ] = useState( false );
     const navigate = useNavigate();
+    // get id from parameters if exist
+    const { id } = useParams();
+
+    // get current user by context
+    const { currentUser } = useContext( AuthContext )
+
     let saved = false;
-    //<-------- info used to test app functionality -------->
-    const userUID = 1234;
-    const profileUID = 12324;
-    // <--------------------------------------------------->
+
+    useEffect( () => {
+        const fetchUser = async () => {
+            const res = await getDoc( doc( db, "users", id ) )
+            console.log( res.data() )
+            setProfileUser( res.data() )
+        }
+        const fetchPost = async () => {
+            const res = await getDoc( doc( db, "posts", id ) );
+            setPosts( res.data() )
+        }
+        // clean up
+        return () => {
+            fetchUser()
+        }
+    }, [ id ] )
 
     return (
         <div className='profileContainer'>
             <div className="profile">
                 <div className="profileInfo">
-                    <img src={ Man } alt="" />
+                    <img src={ profileUser.photoUrl ? profileUser.photoUrl : Blank } alt="" />
                     <div className="profileData">
                         <div className="data">
-                            <span>12</span>
+                            <span>{ Object.entries( posts ).length }</span>
                             <span>Posts</span>
                         </div>
                         <div className="data">
@@ -38,20 +61,23 @@ const ProfileDisplay = () => {
                     </div>
                 </div>
                 <div className="profileBio">
-                    <span>John Doe</span>
-                    <span className='description'>I am unicorn rider from the world of Neo Narnia. I have lived for 1,500 years on this planet.</span>
+                    <span>{ `${profileUser.firstName} ${profileUser.lastName}` }</span>
+                    <span className='description'>{ profileUser.caption }</span>
                 </div>
-                { profileUID !== userUID && <br /> }
-                { profileUID !== userUID && <label><img src={ following ? Following : Follow } alt="" onClick={ () => setFollowing( !following ) } /></label> }
+                { id !== currentUser.id && <br /> }
+                { id !== currentUser.id && <label><img src={ following ? Following : Follow } alt="" onClick={ () => setFollowing( !following ) } /></label> }
                 <br />
                 <div className="line-break"></div>
                 <br />
                 <div className="feed">
                     <div className="icons">
-                        <div className='feed' ><img src={ Feed } alt="" /></div>
-                        <div className='saved' ><img src={ Saved } alt="" /></div>
+                        <div className='feed'><img src={ Feed } alt="" /></div>
+                        <div className='saved'><img src={ Saved } alt="" /></div>
                     </div>
                     { !saved && <div className="userPosts">
+                        { Object.entries( posts ).map( ( id ) => ( <img key={ id } src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } /> ) ) }
+
+                        {/* <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
                         <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
                         <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
                         <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
@@ -59,9 +85,7 @@ const ProfileDisplay = () => {
                         <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
                         <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
                         <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
-                        <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
-                        <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
-                        <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
+                        <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } /> */}
                     </div> }
                     { saved && <div className="userPosts">
                         <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />

@@ -24,7 +24,7 @@ function ImageCard () {
             </div>
             <div className="likes"><span>231 Likes</span></div>
             <div className="comment">
-                <span>Luckly to capture this beautiful lily. Luckly to capture this beautiful lily. Luckly to capture this beautiful lily</span>
+                <span>Luckly to capture this beautiful lily</span>
             </div>
         </div>
     )

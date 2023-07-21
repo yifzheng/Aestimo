@@ -19,6 +19,7 @@ const EditProfile = () => {
     // onload of page, set the user state with data from global state for edit
     useEffect( () => {
         setUser( JSON.parse( JSON.stringify( profileData ) ) )
+        setSelectedImgSrc( profileData.photoURL )
     }, [ profileData ] )
 
     // handle changes in the input fields

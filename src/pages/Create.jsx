@@ -4,7 +4,7 @@ import Menu from '../components/Menu'
 import Image from "../assets/image.png"
 import Lily from "../assets/orange-lily.jpg"
 import { useNavigate } from 'react-router-dom'
-import { ProfileStore } from '../context/ProfileStore'
+import ProfileStore from '../context/ProfileStore'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import { db, storage } from '../firebase'
 import { doc, setDoc, updateDoc } from 'firebase/firestore'
@@ -33,7 +33,6 @@ function Create () {
     const handlePost = () => {
         const selectedImg = imageRef.current
         const userID = currentUser.id;
-        console.log( userID )
         // if we uploaded a file instead of choosing an image from recent posts
         if ( selectedImg && selectedImg.files.length > 0 ) {
             const selectedFile = selectedImg.files[ 0 ] // get image

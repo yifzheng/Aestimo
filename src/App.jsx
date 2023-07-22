@@ -16,14 +16,6 @@ import Start from "./pages/Start";
 function App () {
   const { currentUser } = useContext( AuthContext );
 
-  const ProtectedRoute = ( { children } ) => {
-    if ( !currentUser ) {
-
-      return window.location.replace( `${import.meta.env.VITE_appURL}/login` )
-    }
-    return children;
-  }
-
   return (
     <BrowserRouter>
       <Routes>
@@ -32,13 +24,13 @@ function App () {
           <Route path="login" element={ <Login /> } />
           <Route path="register" element={ <Register /> } />
           {/*<---------- Protected Routes: Can only be accessed if logged in ---------------> */ }
-          <Route path="create" element={ <ProtectedRoute><Create /></ProtectedRoute> } />
-          <Route path="search" element={ <ProtectedRoute><Search /></ProtectedRoute> } />
-          <Route path="profile" element={ <ProtectedRoute><Profile /></ProtectedRoute> } />
-          <Route path="edit_profile" element={ <ProtectedRoute><EditProfile /></ProtectedRoute> } />
-          <Route path="view_post" element={ <ProtectedRoute><ViewPost /></ProtectedRoute> } />
-          <Route path="explore" element={ <ProtectedRoute><Explore /></ProtectedRoute> } />
-          < Route path="home" element={ < ProtectedRoute > <Home /></ProtectedRoute > } />
+          <Route path="create" element={ Object.entries( currentUser ).length > 0 ? <Create /> : <Login /> } />
+          <Route path="search" element={ Object.entries( currentUser ).length > 0 ? <Search /> : <Login /> } />
+          <Route path="profile" element={ Object.entries( currentUser ).length > 0 ? <Profile /> : <Login /> } />
+          <Route path="edit_profile" element={ Object.entries( currentUser ).length > 0 ? <EditProfile /> : <Login /> } />
+          <Route path="view_post" element={ Object.entries( currentUser ).length > 0 ? <ViewPost /> : <Login /> } />
+          <Route path="explore" element={ Object.entries( currentUser ).length > 0 ? <Explore /> : <Login /> } />
+          <Route path="home" element={ Object.entries( currentUser ).length > 0 ? <Home /> : <Login /> } />
           {/* <------------------ End of Protected Routes -----------------------------------> */ }
         </Route >
       </Routes >

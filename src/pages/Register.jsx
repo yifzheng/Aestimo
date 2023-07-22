@@ -18,8 +18,7 @@ function Register () {
         const lastName = capitalizeWord( e.target[ 2 ].value ); // capitalize first letter of name in case user did not
         const email = e.target[ 3 ].value;
         const password = e.target[ 4 ].value;
-        console.log( "email: ", email )
-        console.log( "password: ", password )
+
         try {
             // create a new user with email and password
             const res = await createUserWithEmailAndPassword( auth, email, password );
@@ -50,7 +49,6 @@ function Register () {
             // if we successfully accomplish above, we navigate to home page
             navigate( "/home" )
         } catch ( error ) {
-            console.log( error )
             setErr( true )
             e.target[ 4 ].value = ""; // reset password field if there is an error
         }

@@ -5,7 +5,7 @@ import Account from "../assets/account.png"
 import Home from "../assets/home.png"
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
-import { ProfileStore } from "../context/ProfileStore"
+import ProfileStore from "../context/ProfileStore"
 
 function Menu () {
     const navigate = useNavigate();

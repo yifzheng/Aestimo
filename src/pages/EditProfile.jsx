@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import Navbar from '../components/Navbar'
 import blank from "../assets/blank.png"
 import { useNavigate } from 'react-router-dom'
-import { ProfileStore } from '../context/ProfileStore'
+import ProfileStore from '../context/ProfileStore'
 import { doc, updateDoc } from 'firebase/firestore'
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
 import { db, storage } from '../firebase'

@@ -7,48 +7,44 @@ import Follow from "../assets/follow.png"
 import Following from "../assets/following.png"
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
-import { collection, doc, getDoc, getDocs, onSnapshot, query, where } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore'
 import { db } from '../firebase'
-import { ProfileStore } from "../context/ProfileStore"
-import { PostStore } from '../context/PostStore'
-
+import ProfileStore from "../context/ProfileStore"
 
 const ProfileDisplay = () => {
-    const [ posts, setPosts ] = useState( [] )
+    // const [ posts, setPosts ] = useState( [] )
     const [ following, setFollowing ] = useState( false );
     const navigate = useNavigate();
     // get id from parameters if exist
     const profileID = ProfileStore( ( state ) => state.profileID );
     const setProfileData = ProfileStore( ( state ) => state.setProfileData )
     const profileData = ProfileStore( ( state ) => state.profileData )
-    const setPost = PostStore( ( state ) => state.setPost )
+    const posts = ProfileStore( ( state ) => state.posts )
+    const setPosts = ProfileStore( ( state ) => state.setPosts )
     // get current user by context
     const { currentUser } = useContext( AuthContext )
 
     let saved = false;
+
 
     useEffect( () => {
         const fetchUser = async () => {
             const res = await getDoc( doc( db, "users", profileID ) )
             setProfileData( res.data() )
         }
-        const q = query( collection( db, "posts" ), where( 'ownerID', "==", profileID ) )
-        /* const unsub = onSnapshot( q, ( querySnapshot ) => {
-            const posts = []
-            querySnapshot.forEach( ( doc ) => {
-                posts.push( doc.data() )
+        const fetchPost = () => {
+            const q = query( collection( db, "posts" ), where( 'ownerID', "==", profileID ) )
+            getDocs( q ).then( ( querySnapShot ) => {
+                const documents = querySnapShot.docs.map( ( doc ) => doc.data() )
+                setPosts( documents )
             } )
-            setPosts( posts )
-        } ) */
-        getDocs( q ).then( ( querySnapShot ) => {
-            const documents = querySnapShot.docs.map( ( doc ) => doc.data() )
-            setPosts( documents )
-        } )
+        }
         // clean up
         return () => {
             fetchUser()
+            fetchPost();
         }
-    }, [ profileID, setProfileData ] )
+    }, [ profileID, setPosts, setProfileData ] )
 
     return (
         <div className='profileContainer'>

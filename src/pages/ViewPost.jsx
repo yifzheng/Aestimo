@@ -4,8 +4,7 @@ import Menu from '../components/Menu'
 import Back from "../assets/left-arrow.png"
 import ImageCard from '../components/ImageCard'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { PostStore } from '../context/PostStore'
-import { ProfileStore } from '../context/ProfileStore'
+import ProfileStore from '../context/ProfileStore'
 import { doc, getDoc } from 'firebase/firestore'
 import { db } from '../firebase'
 

@@ -13,19 +13,22 @@ import ProfileStore from "../context/ProfileStore"
 
 const ProfileDisplay = () => {
     // const [ posts, setPosts ] = useState( [] )
-    const [ following, setFollowing ] = useState( false );
+    const [ isFollowing, setIsFollowing ] = useState( false );
+    const [ isPostFeed, setIsPostFeed ] = useState( true )
     const navigate = useNavigate();
-    // get id from parameters if exist
+    // <--------- RETRIEVE DATA FROM PROFILE STORE ---------------->
     const profileID = ProfileStore( ( state ) => state.profileID );
     const setProfileData = ProfileStore( ( state ) => state.setProfileData )
     const profileData = ProfileStore( ( state ) => state.profileData )
     const posts = ProfileStore( ( state ) => state.posts )
     const setPosts = ProfileStore( ( state ) => state.setPosts )
+    const followers = ProfileStore( ( state ) => state.followers )
+    const setFollowers = ProfileStore( ( state ) => state.setFollowers )
+    const following = ProfileStore( ( state ) => state.following )
+    const setFollowing = ProfileStore( ( state ) => state.setFollowing )
+    // <------------------------------------------------------------->
     // get current user by context
     const { currentUser } = useContext( AuthContext )
-
-    let saved = false;
-
 
     useEffect( () => {
         const fetchUser = async () => {
@@ -39,12 +42,22 @@ const ProfileDisplay = () => {
                 setPosts( documents )
             } )
         }
+        const fetchFollowers = async () => {
+            const res = await getDoc( doc( db, "followers", profileID ) )
+            setFollowers( res.data() )
+        }
+        const fetchFollowing = async () => {
+            const res = await getDoc( doc( db, "following", profileID ) )
+            setFollowing( res.data() )
+        }
         // clean up
         return () => {
             fetchUser()
-            fetchPost();
+            fetchPost()
+            fetchFollowers()
+            fetchFollowing()
         }
-    }, [ profileID, setPosts, setProfileData ] )
+    }, [ profileID, setFollowers, setFollowing, setPosts, setProfileData ] )
 
     return (
         <div className='profileContainer'>
@@ -60,11 +73,11 @@ const ProfileDisplay = () => {
                             <span>Posts</span>
                         </div>
                         <div className="data">
-                            <span>12</span>
+                            <span>{ followers.length }</span>
                             <span>Followers</span>
                         </div>
                         <div className="data">
-                            <span>12</span>
+                            <span>{ following.length }</span>
                             <span>Following</span>
                         </div>
                     </div>
@@ -74,19 +87,19 @@ const ProfileDisplay = () => {
                     <span className='description'>{ profileData.caption }</span>
                 </div>
                 { profileID !== currentUser.id && <br /> }
-                { profileID !== currentUser.id && <label><img src={ following ? Following : Follow } alt="" onClick={ () => setFollowing( !following ) } /></label> }
+                { profileID !== currentUser.id && <label><img src={ isFollowing ? Following : Follow } alt="" onClick={ () => setIsFollowing( !isFollowing ) } /></label> }
                 <br />
                 <div className="line-break"></div>
                 <br />
                 <div className="feed">
                     <div className="icons">
-                        <div className='feed'><img src={ Feed } alt="" /></div>
-                        <div className='saved'><img src={ Saved } alt="" /></div>
+                        <div className='feed'><img src={ Feed } alt="" onClick={ () => setIsPostFeed( true ) } /></div>
+                        <div className='saved'><img src={ Saved } alt="" onClick={ () => setIsPostFeed( false ) } /></div>
                     </div>
-                    { !saved && <div className="userPosts">
+                    { isPostFeed && <div className="userPosts">
                         { posts.length > 0 && posts.map( ( doc ) => ( <img key={ doc.uid } src={ doc.photoURL } alt="" onClick={ () => navigate( "/view_post", { state: doc } ) } /> ) ) }
                     </div> }
-                    { saved && <div className="userPosts">
+                    { !isPostFeed && <div className="userPosts">
                         <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
                         <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
                         <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />

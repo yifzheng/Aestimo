@@ -4,16 +4,16 @@ const ProfileStore = create( ( set ) => ( {
     profileID: null,
     profileData: {},
     posts: [],
-    followers: [],
-    following: [],
+    followers: {},
+    following: {},
     setProfileID: ( id ) => set( { profileID: id } ),
     getProfileID: () => set.profileID,
     setProfileData: ( data ) => set( ( prevState ) => ( { profileData: { ...prevState.profileData, ...data } } ) ),
     getProfileData: () => set.profileData,
     setPosts: ( data ) => set( { posts: [ ...data ] } ),
     getPosts: () => set.posts,
-    setFollowers: ( data ) => set( { followers: [ ...data ] } ),
-    setFollowering: ( data ) => set( { followering: [ ...data ] } ),
+    setFollowers: ( data ) => set( { followers: { ...data } } ),
+    setFollowing: ( data ) => set( { following: { ...data } } ),
 } ) )
 
 // hydrate the store from localstorage (if available) on application load

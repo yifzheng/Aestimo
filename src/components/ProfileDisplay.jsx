@@ -7,7 +7,7 @@ import Follow from "../assets/follow.png"
 import Following from "../assets/following.png"
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
-import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, onSnapshot, query, where } from 'firebase/firestore'
 import { db } from '../firebase'
 import ProfileStore from "../context/ProfileStore"
 
@@ -35,13 +35,15 @@ const ProfileDisplay = () => {
             const res = await getDoc( doc( db, "users", profileID ) )
             setProfileData( res.data() )
         }
-        const fetchPost = () => {
-            const q = query( collection( db, "posts" ), where( 'ownerID', "==", profileID ) )
-            getDocs( q ).then( ( querySnapShot ) => {
-                const documents = querySnapShot.docs.map( ( doc ) => doc.data() )
+        const fetchPost = onSnapshot( query( collection( db, "posts" ), where( 'ownerID', "==", profileID ) ),
+            ( querySnapShot ) => {
+                const documents = querySnapShot.docs.map( ( doc ) => ( {
+                    id: doc.id,
+                    ...doc.data()
+                } ) )
                 setPosts( documents )
-            } )
-        }
+            } 
+        )
         const fetchFollowers = async () => {
             const res = await getDoc( doc( db, "followers", profileID ) )
             setFollowers( res.data() )
@@ -50,6 +52,7 @@ const ProfileDisplay = () => {
             const res = await getDoc( doc( db, "following", profileID ) )
             setFollowing( res.data() )
         }
+
         // clean up
         return () => {
             fetchUser()
@@ -73,11 +76,11 @@ const ProfileDisplay = () => {
                             <span>Posts</span>
                         </div>
                         <div className="data">
-                            <span>{ followers.length }</span>
+                            <span>{ Object.entries( followers ).length }</span>
                             <span>Followers</span>
                         </div>
                         <div className="data">
-                            <span>{ following.length }</span>
+                            <span>{ Object.entries( following ).length }</span>
                             <span>Following</span>
                         </div>
                     </div>
@@ -97,7 +100,7 @@ const ProfileDisplay = () => {
                         <div className='saved'><img src={ Saved } alt="" onClick={ () => setIsPostFeed( false ) } /></div>
                     </div>
                     { isPostFeed && <div className="userPosts">
-                        { posts.length > 0 && posts.map( ( doc ) => ( <img key={ doc.uid } src={ doc.photoURL } alt="" onClick={ () => navigate( "/view_post", { state: doc } ) } /> ) ) }
+                        { posts.length > 0 && posts.map( ( doc ) => ( <img key={ doc.id } src={ doc.photoURL } alt="" onClick={ () => navigate( "/view_post", { state: doc } ) } /> ) ) }
                     </div> }
                     { !isPostFeed && <div className="userPosts">
                         <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />

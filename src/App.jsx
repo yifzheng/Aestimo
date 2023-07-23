@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import Create from "./pages/Create";
 import EditProfile from "./pages/EditProfile";
 import Home from "./pages/Home";
@@ -8,26 +8,33 @@ import Register from "./pages/Register";
 import Search from "./pages/Search";
 import ViewPost from "./pages/ViewPost";
 import Explore from "./pages/Explore";
+import { useContext } from "react";
+import { AuthContext } from "./context/AuthContext";
+import Start from "./pages/Start";
 
 
 function App () {
+  const { currentUser } = useContext( AuthContext );
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/">
-          <Route index element={ <Home /> } />
+          <Route index element={ <Start /> } />
           <Route path="login" element={ <Login /> } />
           <Route path="register" element={ <Register /> } />
-          <Route path="create" element={ <Create /> } />
-          <Route path="search" element={ <Search /> } />
-          <Route path="profile" element={ <Profile /> } />
-          <Route path="edit_profile" element={ <EditProfile /> } />
-          <Route path="/view_post" element={ <ViewPost /> } />
-          <Route path="/explore" element={ <Explore /> } />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+          {/*<---------- Protected Routes: Can only be accessed if logged in ---------------> */ }
+          <Route path="create" element={ Object.entries( currentUser ).length > 0 ? <Create /> : <Login /> } />
+          <Route path="search" element={ Object.entries( currentUser ).length > 0 ? <Search /> : <Login /> } />
+          <Route path="profile" element={ Object.entries( currentUser ).length > 0 ? <Profile /> : <Login /> } />
+          <Route path="edit_profile" element={ Object.entries( currentUser ).length > 0 ? <EditProfile /> : <Login /> } />
+          <Route path="view_post" element={ Object.entries( currentUser ).length > 0 ? <ViewPost /> : <Login /> } />
+          <Route path="explore" element={ Object.entries( currentUser ).length > 0 ? <Explore /> : <Login /> } />
+          <Route path="home" element={ Object.entries( currentUser ).length > 0 ? <Home /> : <Login /> } />
+          {/* <------------------ End of Protected Routes -----------------------------------> */ }
+        </Route >
+      </Routes >
+    </BrowserRouter >
   )
 }
 

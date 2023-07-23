@@ -8,10 +8,18 @@ import Save from "../assets/save.png"
 import { arrayRemove, arrayUnion, doc, onSnapshot, updateDoc } from 'firebase/firestore'
 import { db } from '../firebase'
 import ProfileStore from '../context/ProfileStore'
+import { useNavigate } from 'react-router-dom'
 
 function ImageCard ( { post, user } ) {
     const [ postData, setPostData ] = useState( null )
     const imageRef = useRef();
+    const navigate = useNavigate();
+    const setProfileID = ProfileStore( ( state ) => state.setProfileID )
+
+    const handleAccount = () => {
+        setProfileID( user.id )
+        navigate( "/profile" )
+    }
 
     useEffect( () => {
         const fetchDoc = onSnapshot( doc( db, "posts", post.id ), ( docSnapshot ) => {
@@ -53,7 +61,7 @@ function ImageCard ( { post, user } ) {
             <div className="userWrapper">
                 <img src={ user.photoURL ? user.photoURL : Blank } alt='' />
                 <div className='info'>
-                    <span>{ user.userName }</span>
+                    <span onClick={ handleAccount }>{ user.userName }</span>
                     {/* <span className='location'>Your Imagination</span> */ }
                 </div>
             </div>

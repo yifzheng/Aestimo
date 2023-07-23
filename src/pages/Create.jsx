@@ -2,12 +2,11 @@ import React, { useContext, useRef, useState } from 'react'
 import Navbar from '../components/Navbar'
 import Menu from '../components/Menu'
 import Image from "../assets/image.png"
-import Lily from "../assets/orange-lily.jpg"
 import { useNavigate } from 'react-router-dom'
 import ProfileStore from '../context/ProfileStore'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import { db, storage } from '../firebase'
-import { doc, setDoc, updateDoc } from 'firebase/firestore'
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore'
 import { v4 as uuid } from "uuid"
 import { AuthContext } from '../context/AuthContext'
 
@@ -18,6 +17,12 @@ function Create () {
     const [ caption, setCaption ] = useState( "" )
     const navigate = useNavigate();
     const imageRef = useRef();
+    const setProfileID = ProfileStore( ( state ) => state.setProfileID )
+
+    const handleNavigate = () => {
+        setProfileID( currentUser.id )
+        navigate( "/profile" )
+    }
 
     // handle image select
     const handleImageSelect = () => {
@@ -61,7 +66,9 @@ function Create () {
                             "caption": caption,
                             "ownerID": userID,
                             "likes": [],
+                            "createdAt": serverTimestamp(),
                         } )
+                        handleNavigate()
                     } )
                 } )
         }

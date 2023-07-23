@@ -42,15 +42,15 @@ const ProfileDisplay = () => {
                     ...doc.data()
                 } ) )
                 setPosts( documents )
-            } 
+            }
         )
         const fetchFollowers = async () => {
             const res = await getDoc( doc( db, "followers", profileID ) )
-            setFollowers( res.data() )
+            setFollowers( res.data().followers )
         }
         const fetchFollowing = async () => {
             const res = await getDoc( doc( db, "following", profileID ) )
-            setFollowing( res.data() )
+            setFollowing( res.data().following )
         }
 
         // clean up
@@ -76,11 +76,11 @@ const ProfileDisplay = () => {
                             <span>Posts</span>
                         </div>
                         <div className="data">
-                            <span>{ Object.entries( followers ).length }</span>
+                            <span>{ followers.length }</span>
                             <span>Followers</span>
                         </div>
                         <div className="data">
-                            <span>{ Object.entries( following ).length }</span>
+                            <span>{ following.length }</span>
                             <span>Following</span>
                         </div>
                     </div>

@@ -43,9 +43,9 @@ function Register () {
             // create empty collection to store posts saved by user
             await setDoc( doc( db, "saved", userUID ), {} )
             // create empty collection to store users following a currentUser
-            await setDoc( doc( db, "followers", userUID ), {} )
+            await setDoc( doc( db, "followers", userUID ), { followers: [] } )
             // create empty colection to store users that currentUser is following
-            await setDoc( doc( db, "following", userUID ), {} )
+            await setDoc( doc( db, "following", userUID ), { following: [] } )
             // if we successfully accomplish above, we navigate to home page
             navigate( "/home" )
         } catch ( error ) {

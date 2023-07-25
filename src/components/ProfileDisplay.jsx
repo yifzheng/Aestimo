@@ -60,8 +60,8 @@ const ProfileDisplay = () => {
             fetchFollowers()
             fetchFollowing()
         }
-    }, [ profileID, setFollowers, setFollowing, setPosts, setProfileData ] )
-    console.log( profileID !== currentUser.id + " " + profileID + " " + currentUser.id )
+    }, [ profileID, profileData ] )
+
     return (
         <div className='profileContainer'>
             <div className="profile">

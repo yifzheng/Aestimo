@@ -6,7 +6,7 @@ import ProfileStore from '../context/ProfileStore'
 function ResultCard ( { user } ) {
     const navigate = useNavigate()
     const setProfileID = ProfileStore( ( state ) => state.setProfileID )
-
+    
     const handleViewProfile = () => {
         setProfileID( user.id )
         navigate( "/profile" )

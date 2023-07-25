@@ -11,10 +11,10 @@ function Menu () {
     const navigate = useNavigate();
     const { currentUser } = useContext( AuthContext )
     const setProfileID = ProfileStore( ( state ) => state.setProfileID )
-
+    console.log( currentUser )
     const handleAccount = () => {
         setProfileID( currentUser.id )
-        navigate( "/profile" )
+        navigate( "/profile", { replace: true } )
     }
 
     return (

@@ -70,7 +70,7 @@ function ImageCard ( { post, user } ) {
             </div>
             <div className="reactions">
                 <img src={ postData && postData.likes.includes( user.id ) ? RedHeart : Heart } alt="" onClick={ handleLike } ref={ imageRef } />
-                <img src={ Save } alt="" />
+                {/* <img src={ Save } alt="" /> */}
             </div>
             <div className="likes"><span>{ postData && postData.likes.length } Likes</span></div>
             <div className="comment">

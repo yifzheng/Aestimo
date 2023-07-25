@@ -343,14 +343,21 @@ body {
 						}
 					}
 				}
+				.searchContent {
+					padding-left: 20px;
+					font-size: 16px;
+					font-weight: 500;
+					color: $charcoal;
+				}
 				.searchResults {
-					background-color: $powder-blue;
+					background-color: $glaucous;
 					padding: 10px 10px 0px 10px;
 					overflow-y: scroll;
 					-ms-overflow-style: none; /* IE and Edge */
 					scrollbar-width: none; /* Firefox */
 
 					.resultCard {
+						background-color: $powder-blue;
 						display: flex;
 						flex-direction: row;
 						align-items: center;
@@ -359,14 +366,16 @@ body {
 						border-radius: 10px;
 						padding: 5px;
 						margin-bottom: 5px;
+						cursor: pointer;
 						img {
 							width: 72px;
+							height: 72px;
 							border-radius: 50%;
 							border: 2px solid $mountain-pink;
 						}
 						span {
 							color: $charcoal;
-							font-size: 28px;
+							font-size: 22px;
 						}
 					}
 				}

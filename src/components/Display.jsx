@@ -21,20 +21,21 @@ function Display ( { componentName } ) {
     */
 
     useEffect( () => {
-
+        /* Fetch all the users that the current user is following */
         const fetchFollowing = async () => {
             const res = await getDoc( doc( db, "following", userID ) )
             setUserFollowing( res.data().following )
         }
+        /* Fetch all the posts of the currentUser and following users: Sorted by most recent posts */
         const fetchAllPosts = async () => {
             try {
-                const usersArray = [ ...userFollowing, currentUser ]
+                const usersArray = [ ...userFollowing, currentUser ] // array of users
+                // create promises that retreive all the posts of the current users and return it
                 const promises = usersArray.map( async user => {
                     const userID = user.id;
-                    console.log( "user.id: ", userID )
                     const q = query( collection( db, "posts" ), where( "ownerID", "==", userID ) )
                     const userSnapshots = await getDocs( q );
-
+                
                     const userPosts = userSnapshots.docs.map( ( doc ) => ( {
                         id: doc.id,
                         user: user,
@@ -42,21 +43,22 @@ function Display ( { componentName } ) {
                     } ) )
                     return userPosts;
                 } )
-                const snapshots = await Promise.all( promises )
-
+                const snapshots = await Promise.all( promises ) // call and resolve all the promises
+                // sort based on most recent date
                 snapshots.sort( ( a, b ) => b.createdAt - a.createdAt )
-
+                // set the homefeed
                 setHomeFeed( snapshots[0] )
             } catch ( error ) {
                 console.error( error )
             }
         }
+        // clean up useEffect
         return () => {
             fetchFollowing();
             fetchAllPosts()
         }
     }, [ userID ] )
-    console.log( homeFeed )
+    
     return (
         <div className="displayContainer">
             { componentName === "ImageCard" && <div className="displayWrapper">

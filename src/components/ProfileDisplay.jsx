@@ -61,7 +61,7 @@ const ProfileDisplay = () => {
             fetchFollowing()
         }
     }, [ profileID, setFollowers, setFollowing, setPosts, setProfileData ] )
-
+    console.log( profileID !== currentUser.id + " " + profileID + " " + currentUser.id )
     return (
         <div className='profileContainer'>
             <div className="profile">
@@ -97,17 +97,17 @@ const ProfileDisplay = () => {
                 <div className="feed">
                     <div className="icons">
                         <div className='feed'><img src={ Feed } alt="" onClick={ () => setIsPostFeed( true ) } /></div>
-                        <div className='saved'><img src={ Saved } alt="" onClick={ () => setIsPostFeed( false ) } /></div>
+                        {/* <div className='saved'><img src={ Saved } alt="" onClick={ () => setIsPostFeed( false ) } /></div> */ }
                     </div>
                     { isPostFeed && <div className="userPosts">
                         { posts.length > 0 && posts.map( ( doc ) => ( <img key={ doc.id } src={ doc.photoURL } alt="" onClick={ () => navigate( "/view_post", { state: doc } ) } /> ) ) }
                     </div> }
-                    { !isPostFeed && <div className="userPosts">
+                    {/*  !isPostFeed && <div className="userPosts">
                         <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
                         <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
                         <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
                         <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />
-                    </div> }
+                    </div>  */}
                 </div>
             </div>
         </div >

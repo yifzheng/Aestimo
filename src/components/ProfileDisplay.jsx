@@ -10,6 +10,7 @@ import { AuthContext } from '../context/AuthContext'
 import { collection, doc, getDoc, getDocs, onSnapshot, query, where } from 'firebase/firestore'
 import { db } from '../firebase'
 import ProfileStore from "../context/ProfileStore"
+import DisplayPosts from './DisplayPosts'
 
 const ProfileDisplay = () => {
     // const [ posts, setPosts ] = useState( [] )
@@ -60,7 +61,7 @@ const ProfileDisplay = () => {
             fetchFollowers()
             fetchFollowing()
         }
-    }, [ profileID, profileData ] )
+    }, [ profileID, profileData, setProfileData, setFollowers, setFollowing ] )
 
     return (
         <div className='profileContainer'>

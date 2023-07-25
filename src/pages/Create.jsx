@@ -12,16 +12,15 @@ import { AuthContext } from '../context/AuthContext'
 
 function Create () {
     const profileData = ProfileStore( ( state ) => state.profileData ) // used to get the most recent images the uses had when posting
-    const { currentUser } = useContext( AuthContext )
+    const { state: { currentUser } } = useContext( AuthContext )
     const [ imageSrc, setImageSrc ] = useState( "" );
     const [ caption, setCaption ] = useState( "" )
     const navigate = useNavigate();
     const imageRef = useRef();
-    const setProfileID = ProfileStore( ( state ) => state.setProfileID )
+    // const setProfileID = ProfileStore( ( state ) => state.setProfileID )
 
     const handleNavigate = () => {
-        setProfileID( currentUser.id )
-        navigate( "/profile" )
+        navigate( "/home" )
     }
 
     // handle image select

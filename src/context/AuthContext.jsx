@@ -1,17 +1,31 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useReducer, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { getDoc, doc } from "firebase/firestore";
 
+const initialState = {
+    currentUser: {}
+}
+
+const reducer = ( state, action ) => {
+    switch ( action.type ) {
+        case 'UPDATE':
+            return { ...state, currentUser: action.payload }
+        default:
+            return state
+    }
+}
+
 export const AuthContext = createContext();
 
 export const AuthContextProvider = ( { children } ) => {
-    const [ currentUser, setCurrentUser ] = useState( {} )
+    const [ state, dispatch ] = useReducer( reducer, initialState )
 
     useEffect( () => {
         const unsub = onAuthStateChanged( auth, async ( user ) => {
             const res = await getDoc( doc( db, "users", user.uid ) )
-            setCurrentUser( res.data() )
+            dispatch( { type: "UPDATE", payload: res.data() } )
+            console.log( "current user changed", initialState.currentUser )
         } )
 
         // cleanup useEffect
@@ -21,7 +35,7 @@ export const AuthContextProvider = ( { children } ) => {
     }, [] )
 
     return (
-        <AuthContext.Provider value={ { currentUser } }>
+        <AuthContext.Provider value={ { state, dispatch } }>
             { children }
         </AuthContext.Provider>
     )

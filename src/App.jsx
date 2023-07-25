@@ -14,7 +14,7 @@ import Start from "./pages/Start";
 
 
 function App () {
-  const { currentUser } = useContext( AuthContext );
+  const { state: { currentUser } } = useContext( AuthContext );
 
   return (
     <BrowserRouter>

@@ -7,19 +7,19 @@ import ProfileDisplay from './ProfileDisplay'
 import HomepageStore from '../context/HomepageStore'
 import { AuthContext } from '../context/AuthContext'
 import { collection, doc, getDoc, getDocs, onSnapshot, query, where } from 'firebase/firestore'
-import { db } from '../firebase'
+import { auth, db } from '../firebase'
 
 function Display ( { componentName } ) {
     const homeFeed = HomepageStore( ( state ) => state.homeFeed )
     const setHomeFeed = HomepageStore( ( state ) => state.setHomeFeed )
     const userFollowing = HomepageStore( ( state ) => state.userFollowing )
     const setUserFollowing = HomepageStore( ( state ) => state.setUserFollowing )
-    const { currentUser } = useContext( AuthContext )
+    const { state: { currentUser } } = useContext( AuthContext )
     const userID = currentUser.id; // the id of the user
     /* 
         The display on the homepage will include the posts of the user and all of the users the user is following
     */
-
+    console.log( currentUser )
     useEffect( () => {
         /* Fetch all the users that the current user is following */
         const fetchFollowing = async () => {
@@ -35,7 +35,7 @@ function Display ( { componentName } ) {
                     const userID = user.id;
                     const q = query( collection( db, "posts" ), where( "ownerID", "==", userID ) )
                     const userSnapshots = await getDocs( q );
-                
+
                     const userPosts = userSnapshots.docs.map( ( doc ) => ( {
                         id: doc.id,
                         user: user,
@@ -47,7 +47,7 @@ function Display ( { componentName } ) {
                 // sort based on most recent date
                 snapshots.sort( ( a, b ) => b.createdAt - a.createdAt )
                 // set the homefeed
-                setHomeFeed( snapshots[0] )
+                setHomeFeed( snapshots[ 0 ] )
             } catch ( error ) {
                 console.error( error )
             }
@@ -58,7 +58,7 @@ function Display ( { componentName } ) {
             fetchAllPosts()
         }
     }, [ userID ] )
-    
+
     return (
         <div className="displayContainer">
             { componentName === "ImageCard" && <div className="displayWrapper">

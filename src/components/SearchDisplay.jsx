@@ -40,7 +40,6 @@ function SearchDisplay () {
         setSearchContent( "" )
     }
 
-    console.log( users )
     return (
         <div className='searchContainer'>
             <div className="searchBar">

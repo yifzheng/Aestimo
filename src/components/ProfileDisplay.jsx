@@ -28,7 +28,7 @@ const ProfileDisplay = () => {
     const setFollowing = ProfileStore( ( state ) => state.setFollowing )
     // <------------------------------------------------------------->
     // get current user by context
-    const { currentUser } = useContext( AuthContext )
+    const { state: { currentUser } } = useContext( AuthContext )
 
     useEffect( () => {
         const fetchUser = async () => {

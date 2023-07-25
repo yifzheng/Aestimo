@@ -12,7 +12,7 @@ function Menu () {
     const { state: { currentUser } } = useContext( AuthContext )
     const setProfileID = ProfileStore( ( state ) => state.setProfileID )
     // const setProfileData = ProfileStore( ( state ) => state.setProfileData )
-    console.log( currentUser )
+    
     const handleAccount = () => {
         setProfileID( currentUser.id )
         // setProfileData( currentUser )

@@ -7,7 +7,7 @@ function Login () {
     const [ err, setErr ] = useState( false )
     const navigate = useNavigate();
     // handle submit of login form
-    const handleSubmit = async( e ) => {
+    const handleSubmit = async ( e ) => {
         e.preventDefault(); // prevent window from reloading
 
         // parse form values
@@ -16,8 +16,9 @@ function Login () {
 
         // try to login with form data
         try {
-            await signInWithEmailAndPassword(auth, email, password)
-            navigate("/home")
+            await signInWithEmailAndPassword( auth, email, password )
+            navigate( "/home" )
+            location.reload()
         } catch ( error ) {
             setErr( true )
         }

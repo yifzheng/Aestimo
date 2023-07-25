@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import ImageCard from './ImageCard'
 import SearchDisplay from './SearchDisplay'
 import ProfileDisplay from './ProfileDisplay'
@@ -8,10 +8,12 @@ import HomepageStore from '../context/HomepageStore'
 import { AuthContext } from '../context/AuthContext'
 import { collection, doc, getDoc, getDocs, onSnapshot, query, where } from 'firebase/firestore'
 import { auth, db } from '../firebase'
+import ViewProfile from '../pages/ViewProfile'
 
 function Display ( { componentName } ) {
-    const homeFeed = HomepageStore( ( state ) => state.homeFeed )
-    const setHomeFeed = HomepageStore( ( state ) => state.setHomeFeed )
+    const [ homeFeed, setHomeFeed ] = useState( [] )
+    /* const homeFeed = HomepageStore( ( state ) => state.homeFeed )
+    const setHomeFeed = HomepageStore( ( state ) => state.setHomeFeed ) */
     const userFollowing = HomepageStore( ( state ) => state.userFollowing )
     const setUserFollowing = HomepageStore( ( state ) => state.setUserFollowing )
     const { state: { currentUser } } = useContext( AuthContext )
@@ -57,7 +59,7 @@ function Display ( { componentName } ) {
             fetchFollowing();
             fetchAllPosts()
         }
-    }, [ userID ] )
+    }, [ currentUser ] )
 
     return (
         <div className="displayContainer">
@@ -70,7 +72,10 @@ function Display ( { componentName } ) {
             { componentName === "Profile" && <div className='profileWrapper'>
                 <ProfileDisplay />
             </div> }
-        </div>
+            { componentName === "UserProfile" && <div className='profileWrapper'>
+                <ViewProfile />
+            </div> }
+        </div >
     )
 }
 

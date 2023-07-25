@@ -47,7 +47,9 @@ function Register () {
             // create empty colection to store users that currentUser is following
             await setDoc( doc( db, "following", userUID ), { following: [] } )
             // if we successfully accomplish above, we navigate to home page
-            navigate( "/home" )
+            setTimeout( () => {
+                navigate( "/home" )
+            }, 3000 )
         } catch ( error ) {
             setErr( true )
             e.target[ 4 ].value = ""; // reset password field if there is an error

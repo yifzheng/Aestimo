@@ -28,7 +28,7 @@ const ViewPost = () => {
 
     const handleBack = () => {
         setProfileID( post.ownerID )
-        navigate( '/profile', { replace: true } )
+        navigate( -1 )
     }
 
     return (

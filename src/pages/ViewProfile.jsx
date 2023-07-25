@@ -11,7 +11,7 @@ import { collection, doc, getDoc, onSnapshot, query, where } from 'firebase/fire
 import { db } from '../firebase'
 import ProfileStore from "../context/ProfileStore"
 
-const ProfileDisplay = () => {
+const ViewProfile = () => {
     // const [ posts, setPosts ] = useState( [] )
     const [ profileData, setProfileData ] = useState( [] )
     const [ isFollowing, setIsFollowing ] = useState( false );
@@ -115,4 +115,4 @@ const ProfileDisplay = () => {
     )
 }
 
-export default ProfileDisplay
+export default ViewProfile

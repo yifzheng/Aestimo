@@ -16,7 +16,7 @@ function Menu () {
     const handleAccount = () => {
         setProfileID( currentUser.id )
         // setProfileData( currentUser )
-        navigate( "/profile", { replace: true } )
+        navigate( "/profile" )
     }
 
     return (

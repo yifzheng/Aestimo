@@ -21,7 +21,7 @@ function Display ( { componentName } ) {
     /* 
         The display on the homepage will include the posts of the user and all of the users the user is following
     */
-    console.log( currentUser )
+    
     useEffect( () => {
         /* Fetch all the users that the current user is following */
         const fetchFollowing = async () => {

@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import Lily from "../assets/orange-lily.jpg"
 import Blank from "../assets/blank.png"
 import Heart from "../assets/heart.png"
@@ -9,16 +9,24 @@ import { arrayRemove, arrayUnion, doc, onSnapshot, updateDoc } from 'firebase/fi
 import { db } from '../firebase'
 import ProfileStore from '../context/ProfileStore'
 import { useNavigate } from 'react-router-dom'
+import { AuthContext } from '../context/AuthContext'
 
 function ImageCard ( { post, user } ) {
     const [ postData, setPostData ] = useState( null )
     const imageRef = useRef();
     const navigate = useNavigate();
     const setProfileID = ProfileStore( ( state ) => state.setProfileID )
+    const { state: { currentUser } } = useContext( AuthContext )
 
     const handleAccount = () => {
         setProfileID( user.id )
-        navigate( "/profile" )
+        if ( currentUser.id === user.id ) {
+
+            navigate( "/profile" )
+        }
+        else {
+            navigate( `/viewprofile/${user.userName}` )
+        }
     }
 
     useEffect( () => {
@@ -70,7 +78,7 @@ function ImageCard ( { post, user } ) {
             </div>
             <div className="reactions">
                 <img src={ postData && postData.likes.includes( user.id ) ? RedHeart : Heart } alt="" onClick={ handleLike } ref={ imageRef } />
-                {/* <img src={ Save } alt="" /> */}
+                {/* <img src={ Save } alt="" /> */ }
             </div>
             <div className="likes"><span>{ postData && postData.likes.length } Likes</span></div>
             <div className="comment">

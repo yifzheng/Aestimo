@@ -55,7 +55,6 @@ function Navbar ( { componentName } ) {
                 </div>
             </> }
             { componentName === "UserProfile" && <>
-                { console.log( user.userName ) }
                 <div className="userName">
                     <span className='user-name'>{ user.userName }</span>
                 </div>

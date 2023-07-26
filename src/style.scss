@@ -383,12 +383,25 @@ body {
 					display: none;
 				}
 				.explore {
-					margin-top: 10px;
-					display: grid;
-					grid-template-columns: repeat(3, 1fr);
-					img {
-						width: 99%;
-						border: 1px solid $mountain-pink;
+					display: flex;
+					flex-direction: column;
+					justify-content: space-between;
+					.explore-posts {
+						margin-top: 10px;
+						display: grid;
+						grid-template-columns: repeat(3, 1fr);
+						img {
+							width: 99%;
+							height: 150px;
+							border: 1px solid $mountain-pink;
+							cursor: pointer;
+						}
+					}
+					.showMore {
+						color:#7cdedc;
+						font-size: 18px;
+						text-align: center;
+						margin-top: 20px;
 						cursor: pointer;
 					}
 				}

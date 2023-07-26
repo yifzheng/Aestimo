@@ -25,7 +25,6 @@ export const AuthContextProvider = ( { children } ) => {
         const unsub = onAuthStateChanged( auth, async ( user ) => {
             const res = await getDoc( doc( db, "users", user.uid ) )
             dispatch( { type: "UPDATE", payload: res.data() } )
-            console.log( "current user changed", initialState.currentUser )
         } )
 
         // cleanup useEffect

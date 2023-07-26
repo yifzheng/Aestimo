@@ -45,14 +45,17 @@ const ProfileDisplay = () => {
                 setPosts( documents )
             }
         )
-        const fetchFollowers = async () => {
-            const res = await getDoc( doc( db, "followers", profileID ) )
-            setFollowers( res.data().followers )
-        }
-        const fetchFollowing = async () => {
-            const res = await getDoc( doc( db, "following", profileID ) )
-            setFollowing( res.data().following )
-        }
+        const fetchFollowers = onSnapshot( doc( db, "followers", profileID ), ( docSnapshot ) => {
+            if ( docSnapshot.exists() ) {
+                setFollowers( docSnapshot.data().followers )
+            }
+        } )
+
+        const fetchFollowing = onSnapshot( doc( db, "following", profileID ), ( docSnapshot ) => {
+            if ( docSnapshot.exists() ) {
+                setFollowing( docSnapshot.data().following )
+            }
+        } )
 
         // clean up
         return () => {
@@ -90,8 +93,6 @@ const ProfileDisplay = () => {
                     <span>{ `${profileData.firstName} ${profileData.lastName}` }</span>
                     <span className='description'>{ profileData.caption }</span>
                 </div>
-                { profileID !== currentUser.id && <br /> }
-                { profileID !== currentUser.id && <label><img src={ isFollowing ? Following : Follow } alt="" onClick={ () => setIsFollowing( !isFollowing ) } /></label> }
                 <br />
                 <div className="line-break"></div>
                 <br />

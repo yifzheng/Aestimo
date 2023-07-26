@@ -21,7 +21,7 @@ function Display ( { componentName } ) {
     /* 
         The display on the homepage will include the posts of the user and all of the users the user is following
     */
-    
+
     useEffect( () => {
         /* Fetch all the users that the current user is following */
         const fetchFollowing = async () => {
@@ -46,10 +46,12 @@ function Display ( { componentName } ) {
                     return userPosts;
                 } )
                 const snapshots = await Promise.all( promises ) // call and resolve all the promises
+                let newArray = snapshots.flat()
                 // sort based on most recent date
-                snapshots.sort( ( a, b ) => b.createdAt - a.createdAt )
+                newArray.sort( ( a, b ) => b.createdAt - a.createdAt )
+
                 // set the homefeed
-                setHomeFeed( snapshots[ 0 ] )
+                setHomeFeed( newArray )
             } catch ( error ) {
                 console.error( error )
             }
@@ -59,7 +61,7 @@ function Display ( { componentName } ) {
             fetchFollowing();
             fetchAllPosts()
         }
-    }, [ currentUser ] )
+    }, [ userFollowing ] )
 
     return (
         <div className="displayContainer">

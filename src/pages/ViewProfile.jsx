@@ -7,14 +7,13 @@ import Follow from "../assets/follow.png"
 import Following from "../assets/following.png"
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
-import { collection, doc, getDoc, onSnapshot, query, where } from 'firebase/firestore'
+import { arrayRemove, arrayUnion, collection, doc, getDoc, onSnapshot, query, updateDoc, where } from 'firebase/firestore'
 import { db } from '../firebase'
 import ProfileStore from "../context/ProfileStore"
 
 const ViewProfile = () => {
     // const [ posts, setPosts ] = useState( [] )
     const [ profileData, setProfileData ] = useState( [] )
-    const [ isFollowing, setIsFollowing ] = useState( false );
     const [ isPostFeed, setIsPostFeed ] = useState( true )
     const navigate = useNavigate();
     // <--------- RETRIEVE DATA FROM PROFILE STORE ---------------->
@@ -45,14 +44,17 @@ const ViewProfile = () => {
                 setPosts( documents )
             }
         )
-        const fetchFollowers = async () => {
-            const res = await getDoc( doc( db, "followers", profileID ) )
-            setFollowers( res.data().followers )
-        }
-        const fetchFollowing = async () => {
-            const res = await getDoc( doc( db, "following", profileID ) )
-            setFollowing( res.data().following )
-        }
+        const fetchFollowers = onSnapshot( doc( db, "followers", profileID ), ( docSnapshot ) => {
+            if ( docSnapshot.exists() ) {
+                setFollowers( docSnapshot.data().followers )
+            }
+        } )
+
+        const fetchFollowing = onSnapshot( doc( db, "following", profileID ), ( docSnapshot ) => {
+            if ( docSnapshot.exists() ) {
+                setFollowing( docSnapshot.data().following )
+            }
+        } )
 
         // clean up
         return () => {
@@ -62,6 +64,31 @@ const ViewProfile = () => {
             fetchFollowing()
         }
     }, [ profileID ] )
+
+    // function to handle the follow status of user
+    const handleFollow = async () => {
+        const currentUserID = currentUser.id;
+        if ( followers.includes( currentUser.id ) ) {
+            // if the current profile contains the current user's id, remove it to unfollow
+            await updateDoc( doc( db, "followers", profileID ), {
+                followers: arrayRemove( currentUser )
+            } )
+            // remove the current profile Id from current users list of people following
+            await updateDoc( doc( db, "following", currentUserID ), {
+                following: arrayRemove( profileData )
+            } )
+        }
+        else {
+            // not following so add user Id to the current profiles list of followers
+            await updateDoc( doc( db, "followers", profileID ), {
+                followers: arrayUnion( currentUser )
+            } )
+            // add the current profile Id from current users list of people following
+            await updateDoc( doc( db, "following", currentUserID ), {
+                following: arrayUnion( profileData )
+            } )
+        }
+    }
 
     return (
         <div className='profileContainer'>
@@ -90,8 +117,10 @@ const ViewProfile = () => {
                     <span>{ `${profileData.firstName} ${profileData.lastName}` }</span>
                     <span className='description'>{ profileData.caption }</span>
                 </div>
-                { profileID !== currentUser.id && <br /> }
-                { profileID !== currentUser.id && <label><img src={ isFollowing ? Following : Follow } alt="" onClick={ () => setIsFollowing( !isFollowing ) } /></label> }
+                <br />
+                { /* profileID !== currentUser.id && <label><img src={ isFollowing ? Following : Follow } alt="" onClick={ () => setIsFollowing( !isFollowing ) } /></label> */ }
+                <button onClick={ handleFollow }>{ followers.some( ( user ) => user.id === currentUser.id ) ? 'Following' : 'Follow' }</button>
+                <br />
                 <br />
                 <div className="line-break"></div>
                 <br />

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import ResultCard from './ResultCard'
 import Man from "../assets/man.png"
 import Search from '../assets/search.png'
@@ -7,21 +7,27 @@ import { useNavigate } from 'react-router-dom'
 import { collection, getDocs, onSnapshot, query, where } from 'firebase/firestore'
 import { db } from '../firebase'
 import { AuthContext } from '../context/AuthContext'
+import ExploreStore from '../context/ExploreStore'
 
 function SearchDisplay () {
     const [ searchContent, setSearchContent ] = useState( "" )
     const [ results, setResults ] = useState( false )
     const [ users, setUsers ] = useState( [] )
-    const [ posts, setPosts ] = useState( [] )
+    /// const [ posts, setPosts ] = useState( [] )
     const [ displayLimit, setDisplayLimit ] = useState( 30 )
     const navigate = useNavigate();
     const { state: { currentUser } } = useContext( AuthContext )
+    const explorePosts = ExploreStore( ( state ) => state.explorePosts )
+    const setExplorePosts = ExploreStore( ( state ) => state.setExplorePosts )
+    const setPostRef = ExploreStore( ( state ) => state.setPostRef )
+    const idRef = useRef()
 
     // get all posts that isn't the users adn sort by creation date
     useEffect( () => {
         const unsub = onSnapshot( query( collection( db, "posts" ), where( "ownerID", "!=", currentUser.id ) ), ( querySnapshot ) => {
-            const postsData = querySnapshot.docs.map( ( doc ) => doc.data() )
-            setPosts( postsData )
+            const postsData = querySnapshot.docs.map( ( doc ) => ( { id: doc.id, ...doc.data() } ) )
+            postsData.sort( ( a, b ) => b.createAt - a.createAt )
+            setExplorePosts( postsData )
         } )
         return () => {
             unsub()
@@ -59,6 +65,12 @@ function SearchDisplay () {
         setSearchContent( "" )
     }
 
+    const handleExplore = () => {
+        const imageID = idRef.current.id
+        setPostRef( imageID )
+        navigate( '/explore' )
+    }
+
     return (
         <div className='searchContainer'>
             <div className="searchBar">
@@ -71,13 +83,13 @@ function SearchDisplay () {
             </div> }
             { !results && <div className="explore">
                 <div className="explore-posts">
-                    { posts.length > 0 && posts.map( ( post, index ) => {
+                    { explorePosts.length > 0 && explorePosts.map( ( post, index ) => {
                         if ( ( index + 1 ) < displayLimit ) {
-                            return <img key={ post.id } src={ post.photoURL } alt="" onClick={ () => navigate( "/explore" ) } />
+                            return <img key={ post.id } id={ post.id } src={ post.photoURL } alt="" onClick={ handleExplore } ref={ idRef } />
                         }
                     } ) }
                 </div>
-                { posts.length > 30 && < div className="showMore"><span onClick={ increaseLimit }>Show More</span></div> }
+                { explorePosts.length > 30 && < div className="showMore"><span onClick={ increaseLimit }>Show More</span></div> }
             </div> }
 
         </div >

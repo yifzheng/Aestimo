@@ -13,14 +13,13 @@ import ProfileStore from "../context/ProfileStore"
 
 const ProfileDisplay = () => {
     // const [ posts, setPosts ] = useState( [] )
-    const [ profileData, setProfileData ] = useState( [] )
-    const [ isFollowing, setIsFollowing ] = useState( false );
+    // const [ profileData, setProfileData ] = useState( [] )
     const [ isPostFeed, setIsPostFeed ] = useState( true )
     const navigate = useNavigate();
     // <--------- RETRIEVE DATA FROM PROFILE STORE ---------------->
     const profileID = ProfileStore( ( state ) => state.profileID );
-    //const setProfileData = ProfileStore( ( state ) => state.setProfileData )
-    // const profileData = ProfileStore( ( state ) => state.profileData )
+    const setProfileData = ProfileStore( ( state ) => state.setProfileData )
+    const profileData = ProfileStore( ( state ) => state.profileData )
     const posts = ProfileStore( ( state ) => state.posts )
     const setPosts = ProfileStore( ( state ) => state.setPosts )
     const followers = ProfileStore( ( state ) => state.followers )

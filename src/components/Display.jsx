@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import ImageCard from './ImageCard'
 import SearchDisplay from './SearchDisplay'
 import ProfileDisplay from './ProfileDisplay'
@@ -9,6 +9,8 @@ import { AuthContext } from '../context/AuthContext'
 import { collection, doc, getDoc, getDocs, onSnapshot, query, where } from 'firebase/firestore'
 import { auth, db } from '../firebase'
 import ViewProfile from '../pages/ViewProfile'
+import ExploreDisplay from './ExploreDisplay'
+import ExploreStore from '../context/ExploreStore'
 
 function Display ( { componentName } ) {
     const [ homeFeed, setHomeFeed ] = useState( [] )
@@ -16,6 +18,7 @@ function Display ( { componentName } ) {
     const setHomeFeed = HomepageStore( ( state ) => state.setHomeFeed ) */
     const userFollowing = HomepageStore( ( state ) => state.userFollowing )
     const setUserFollowing = HomepageStore( ( state ) => state.setUserFollowing )
+    const explorePosts = ExploreStore( ( state ) => state.explorePosts )
     const { state: { currentUser } } = useContext( AuthContext )
     const userID = currentUser.id; // the id of the user
     /* 
@@ -66,7 +69,7 @@ function Display ( { componentName } ) {
     return (
         <div className="displayContainer">
             { componentName === "ImageCard" && <div className="displayWrapper">
-                { homeFeed.length > 0 && homeFeed.map( ( post ) => ( <ImageCard key={ post.id } post={ post } user={ post.user } /> ) ) }
+                { homeFeed.length > 0 && homeFeed.map( ( post ) => ( <ImageCard key={ post.id } post={ post } /> ) ) }
             </div> }
             { componentName === "SearchDisplay" && <div className='searchWrapper'>
                 <SearchDisplay />
@@ -76,6 +79,9 @@ function Display ( { componentName } ) {
             </div> }
             { componentName === "UserProfile" && <div className='profileWrapper'>
                 <ViewProfile />
+            </div> }
+            { componentName === "Explore" && <div className='displayWrapper'>
+                { explorePosts.map( ( post ) => ( <ImageCard key={ post.id } post={ post } id={ post.id } /> ) ) }
             </div> }
         </div >
     )

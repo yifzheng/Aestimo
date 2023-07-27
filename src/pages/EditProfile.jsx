@@ -1,11 +1,13 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useContext } from 'react'
 import Navbar from '../components/Navbar'
 import blank from "../assets/blank.png"
 import { useNavigate } from 'react-router-dom'
 import ProfileStore from '../context/ProfileStore'
 import { doc, updateDoc } from 'firebase/firestore'
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
-import { db, storage } from '../firebase'
+import { auth, db, storage } from '../firebase'
+import { updateProfile } from 'firebase/auth'
+import { AuthContext } from '../context/AuthContext'
 
 const EditProfile = () => {
     const profileData = ProfileStore( ( state ) => state.profileData )
@@ -15,6 +17,7 @@ const EditProfile = () => {
     const [ selectedImgSrc, setSelectedImgSrc ] = useState( '' )
     const navigate = useNavigate();
     const fileInputRef = useRef();
+    const { dispatch } = useContext( AuthContext )
 
     // onload of page, set the user state with data from global state for edit
     useEffect( () => {
@@ -60,9 +63,12 @@ const EditProfile = () => {
                     }, () => {
                         getDownloadURL( uploadTask.snapshot.ref ).then( async ( downloadURL ) => {
                             updatedUser.photoURL = downloadURL;
-                            console.log( updatedUser )
                             // find the user document associated with profileData.id and update its contents with contents from user object
+                            await updateProfile( auth.currentUser, {
+                                photoURL: downloadURL
+                            } )
                             await updateDoc( doc( db, "users", profileData.id ), updatedUser )
+                            dispatch( { type: "UPDATE", payload: updatedUser } )
                             // updateDoc does not return the updated doc so we manually set the profile data again
                             setProfileData( updatedUser )
                             navigate( "/profile" )
@@ -91,7 +97,6 @@ const EditProfile = () => {
         if ( fileInput && fileInput.files.length > 0 ) { // if there is a file in the file input
             const selectedFile = fileInput.files[ 0 ]; // get the first one
             const selectedFileURL = URL.createObjectURL( selectedFile )
-            console.log( selectedFileURL )
             setSelectedImgSrc( selectedFileURL )
         }
     }

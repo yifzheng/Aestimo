@@ -7,19 +7,19 @@ import Follow from "../assets/follow.png"
 import Following from "../assets/following.png"
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
-import { collection, doc, getDoc, onSnapshot, query, where } from 'firebase/firestore'
+import { arrayRemove, arrayUnion, collection, doc, getDoc, onSnapshot, query, updateDoc, where } from 'firebase/firestore'
 import { db } from '../firebase'
 import ProfileStore from "../context/ProfileStore"
 
-const ProfileDisplay = () => {
+const ViewProfile = () => {
     // const [ posts, setPosts ] = useState( [] )
-    // const [ profileData, setProfileData ] = useState( [] )
+    const [ profileData, setProfileData ] = useState( [] )
     const [ isPostFeed, setIsPostFeed ] = useState( true )
     const navigate = useNavigate();
     // <--------- RETRIEVE DATA FROM PROFILE STORE ---------------->
     const profileID = ProfileStore( ( state ) => state.profileID );
-    const setProfileData = ProfileStore( ( state ) => state.setProfileData )
-    const profileData = ProfileStore( ( state ) => state.profileData )
+    //const setProfileData = ProfileStore( ( state ) => state.setProfileData )
+    // const profileData = ProfileStore( ( state ) => state.profileData )
     const posts = ProfileStore( ( state ) => state.posts )
     const setPosts = ProfileStore( ( state ) => state.setPosts )
     const followers = ProfileStore( ( state ) => state.followers )
@@ -65,6 +65,31 @@ const ProfileDisplay = () => {
         }
     }, [ profileID ] )
 
+    // function to handle the follow status of user
+    const handleFollow = async () => {
+        const currentUserID = currentUser.id;
+        if ( followers.includes( currentUser.id ) ) {
+            // if the current profile contains the current user's id, remove it to unfollow
+            await updateDoc( doc( db, "followers", profileID ), {
+                followers: arrayRemove( currentUser )
+            } )
+            // remove the current profile Id from current users list of people following
+            await updateDoc( doc( db, "following", currentUserID ), {
+                following: arrayRemove( profileData )
+            } )
+        }
+        else {
+            // not following so add user Id to the current profiles list of followers
+            await updateDoc( doc( db, "followers", profileID ), {
+                followers: arrayUnion( currentUser )
+            } )
+            // add the current profile Id from current users list of people following
+            await updateDoc( doc( db, "following", currentUserID ), {
+                following: arrayUnion( profileData )
+            } )
+        }
+    }
+
     return (
         <div className='profileContainer'>
             <div className="profile">
@@ -93,6 +118,10 @@ const ProfileDisplay = () => {
                     <span className='description'>{ profileData.caption }</span>
                 </div>
                 <br />
+                { /* profileID !== currentUser.id && <label><img src={ isFollowing ? Following : Follow } alt="" onClick={ () => setIsFollowing( !isFollowing ) } /></label> */ }
+                <button onClick={ handleFollow }>{ followers.some( ( user ) => user.id === currentUser.id ) ? 'Following' : 'Follow' }</button>
+                <br />
+                <br />
                 <div className="line-break"></div>
                 <br />
                 <div className="feed">
@@ -115,4 +144,4 @@ const ProfileDisplay = () => {
     )
 }
 
-export default ProfileDisplay
+export default ViewProfile

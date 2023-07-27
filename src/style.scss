@@ -297,7 +297,7 @@ body {
 					padding: 0px 10px;
 					gap: 10px;
 					align-items: center;
-					font-size: 20px;
+					font-size: 18px;
 
 					span {
 						font-weight: 500;
@@ -343,14 +343,21 @@ body {
 						}
 					}
 				}
+				.searchContent {
+					padding-left: 20px;
+					font-size: 16px;
+					font-weight: 500;
+					color: $charcoal;
+				}
 				.searchResults {
-					background-color: $powder-blue;
+					background-color: $glaucous;
 					padding: 10px 10px 0px 10px;
 					overflow-y: scroll;
 					-ms-overflow-style: none; /* IE and Edge */
 					scrollbar-width: none; /* Firefox */
 
 					.resultCard {
+						background-color: $powder-blue;
 						display: flex;
 						flex-direction: row;
 						align-items: center;
@@ -359,14 +366,16 @@ body {
 						border-radius: 10px;
 						padding: 5px;
 						margin-bottom: 5px;
+						cursor: pointer;
 						img {
 							width: 72px;
+							height: 72px;
 							border-radius: 50%;
 							border: 2px solid $mountain-pink;
 						}
 						span {
 							color: $charcoal;
-							font-size: 28px;
+							font-size: 22px;
 						}
 					}
 				}
@@ -374,12 +383,25 @@ body {
 					display: none;
 				}
 				.explore {
-					margin-top: 10px;
-					display: grid;
-					grid-template-columns: repeat(3, 1fr);
-					img {
-						width: 99%;
-						border: 1px solid $mountain-pink;
+					display: flex;
+					flex-direction: column;
+					justify-content: space-between;
+					.explore-posts {
+						margin-top: 10px;
+						display: grid;
+						grid-template-columns: repeat(3, 1fr);
+						img {
+							width: 99%;
+							height: 150px;
+							border: 1px solid $mountain-pink;
+							cursor: pointer;
+						}
+					}
+					.showMore {
+						color:#7cdedc;
+						font-size: 18px;
+						text-align: center;
+						margin-top: 20px;
 						cursor: pointer;
 					}
 				}
@@ -418,7 +440,7 @@ body {
 					flex-direction: column;
 					gap: 10px;
 					text-align: center;
-					font-size: 20px;
+					font-size: 18px;
 					font-weight: 700;
 				}
 			}
@@ -431,6 +453,21 @@ body {
 				padding: 5px;
 				border-radius: 10px;
 				cursor: pointer;
+			}
+		}
+		button {
+			width: 100%;
+			height: 30px;
+			background-color: $powder-blue;
+			outline: none;
+			border: none;
+			border-radius: 5px;
+			color: white;
+			font-size: 14px;
+			font-weight: 600;
+			cursor: pointer;
+			&:hover {
+				background-color: #a9b9CF;
 			}
 		}
 
@@ -672,6 +709,7 @@ body {
 
 		img {
 			width: 99%;
+			height: 135px;
 			border: 1px solid $mountain-pink;
 			cursor: pointer;
 		}

@@ -1,37 +1,41 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import ImageCard from './ImageCard'
 import SearchDisplay from './SearchDisplay'
 import ProfileDisplay from './ProfileDisplay'
 import HomepageStore from '../context/HomepageStore'
 import { AuthContext } from '../context/AuthContext'
 import { collection, doc, getDoc, getDocs, onSnapshot, query, where } from 'firebase/firestore'
-import { db } from '../firebase'
+import { auth, db } from '../firebase'
+import ViewProfile from '../pages/ViewProfile'
+import ExploreDisplay from './ExploreDisplay'
 
 function Display ( { componentName } ) {
-    const homeFeed = HomepageStore( ( state ) => state.homeFeed )
-    const setHomeFeed = HomepageStore( ( state ) => state.setHomeFeed )
+    const [ homeFeed, setHomeFeed ] = useState( [] )
+    /* const homeFeed = HomepageStore( ( state ) => state.homeFeed )
+    const setHomeFeed = HomepageStore( ( state ) => state.setHomeFeed ) */
     const userFollowing = HomepageStore( ( state ) => state.userFollowing )
     const setUserFollowing = HomepageStore( ( state ) => state.setUserFollowing )
-    const { currentUser } = useContext( AuthContext )
+    const { state: { currentUser } } = useContext( AuthContext )
     const userID = currentUser.id; // the id of the user
     /* 
         The display on the homepage will include the posts of the user and all of the users the user is following
     */
 
     useEffect( () => {
-
+        /* Fetch all the users that the current user is following */
         const fetchFollowing = async () => {
             const res = await getDoc( doc( db, "following", userID ) )
             setUserFollowing( res.data().following )
         }
+        /* Fetch all the posts of the currentUser and following users: Sorted by most recent posts */
         const fetchAllPosts = async () => {
             try {
-                const usersArray = [ ...userFollowing, currentUser ]
+                const usersArray = [ ...userFollowing, currentUser ] // array of users
+                // create promises that retreive all the posts of the current users and return it
                 const promises = usersArray.map( async user => {
                     const userID = user.id;
-                    console.log( "user.id: ", userID )
                     const q = query( collection( db, "posts" ), where( "ownerID", "==", userID ) )
                     const userSnapshots = await getDocs( q );
 
@@ -42,25 +46,29 @@ function Display ( { componentName } ) {
                     } ) )
                     return userPosts;
                 } )
-                const snapshots = await Promise.all( promises )
+                const snapshots = await Promise.all( promises ) // call and resolve all the promises
+                let newArray = snapshots.flat()
+                // sort based on most recent date
+                newArray.sort( ( a, b ) => b.createdAt - a.createdAt )
 
-                snapshots.sort( ( a, b ) => b.createdAt - a.createdAt )
-
-                setHomeFeed( snapshots[0] )
+                // set the homefeed
+                setHomeFeed( newArray )
             } catch ( error ) {
                 console.error( error )
             }
         }
+
+        // clean up useEffect
         return () => {
             fetchFollowing();
             fetchAllPosts()
         }
-    }, [ userID ] )
-    console.log( homeFeed )
+    }, [ userFollowing ] )
+
     return (
         <div className="displayContainer">
             { componentName === "ImageCard" && <div className="displayWrapper">
-                { homeFeed.length > 0 && homeFeed.map( ( post ) => ( <ImageCard key={ post.id } post={ post } user={ post.user } /> ) ) }
+                { homeFeed.length > 0 && homeFeed.map( ( post ) => ( <ImageCard key={ post.id } post={ post } /> ) ) }
             </div> }
             { componentName === "SearchDisplay" && <div className='searchWrapper'>
                 <SearchDisplay />
@@ -68,7 +76,14 @@ function Display ( { componentName } ) {
             { componentName === "Profile" && <div className='profileWrapper'>
                 <ProfileDisplay />
             </div> }
-        </div>
+            { componentName === "UserProfile" && <div className='profileWrapper'>
+                <ViewProfile />
+            </div> }
+            { componentName === "Explore" && <div className='displayWrapper'>
+                {/*  explorePosts.map( ( post ) => ( <ImageCard key={ post.id } post={ post } id={ post.id } /> ) ) */ }
+                <ExploreDisplay />
+            </div> }
+        </div >
     )
 }
 

@@ -15,7 +15,7 @@ const Explore = () => {
                         <span className='post'>Explore</span>
                     </div>
                 </div>
-                <Display componentName={ "ImageCard" } />
+                <Display componentName={ "Explore" } />
                 <Menu />
             </div>
         </div>

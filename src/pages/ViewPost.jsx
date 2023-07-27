@@ -28,7 +28,7 @@ const ViewPost = () => {
 
     const handleBack = () => {
         setProfileID( post.ownerID )
-        navigate( '/profile', { replace: true } )
+        navigate( -1 )
     }
 
     return (
@@ -43,7 +43,7 @@ const ViewPost = () => {
                 </div>
                 <div className="displayContainer">
                     <div className="displayWrapper">
-                        <ImageCard post={ post } user={ user } />
+                        <ImageCard post={ post } />
                     </div>
                 </div>
                 <Menu />

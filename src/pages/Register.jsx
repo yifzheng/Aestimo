@@ -37,6 +37,7 @@ function Register () {
                 email,
                 caption: "",
                 photoURL: null,
+                recents: []
             } )
             // create empty posts collection
             await setDoc( doc( db, "posts", userUID ), {} )

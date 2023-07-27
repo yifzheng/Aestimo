@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import ProfileStore from '../context/ProfileStore'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import { db, storage } from '../firebase'
-import { doc, serverTimestamp, setDoc } from 'firebase/firestore'
+import { arrayUnion, doc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore'
 import { v4 as uuid } from "uuid"
 import { AuthContext } from '../context/AuthContext'
 
@@ -34,9 +34,10 @@ function Create () {
         }
     }
 
-    const handlePost = () => {
+    const handlePost = async () => {
         const selectedImg = imageRef.current
-        const userID = currentUser.id;
+        const userID = currentUser.id; // current user id
+        const docUUID = uuid(); // uuid of post document
         // if we uploaded a file instead of choosing an image from recent posts
         if ( selectedImg && selectedImg.files.length > 0 ) {
             const selectedFile = selectedImg.files[ 0 ] // get image
@@ -59,7 +60,8 @@ function Create () {
                 }, () => {
                     getDownloadURL( uploadTask.snapshot.ref ).then( async ( downloadURL ) => {
                         // update the posts document for the user in posts collection
-                        const docUUID = uuid();
+
+                        // create document is posts collection
                         await setDoc( doc( db, "posts", docUUID ), {
                             "photoURL": downloadURL,
                             "caption": caption,
@@ -67,9 +69,28 @@ function Create () {
                             "likes": [],
                             "createdAt": serverTimestamp(),
                         } )
-                        handleNavigate()
+                        // update the recents array in users most recent
+                        await updateDoc( doc( db, "users", currentUser.id ), {
+                            recents: arrayUnion( downloadURL )
+                        } )
+                        setTimeout( () => handleNavigate(), 1500 )
                     } )
                 } )
+        }
+        else {
+            // make sure an image is selected from recents list of images
+            if ( imageSrc.length > 0 ) {
+                // create document is posts collection
+                await setDoc( doc( db, "posts", docUUID ), {
+                    "photoURL": imageSrc,
+                    "caption": caption,
+                    "ownerID": userID,
+                    "likes": [],
+                    "createdAt": serverTimestamp(),
+                } )
+                // no need to update the recents array in users most recent because image is already there
+                setTimeout( () => handleNavigate(), 1500 )
+            }
         }
     }
 

@@ -10,7 +10,6 @@ import { collection, doc, getDoc, getDocs, onSnapshot, query, where } from 'fire
 import { auth, db } from '../firebase'
 import ViewProfile from '../pages/ViewProfile'
 import ExploreDisplay from './ExploreDisplay'
-import ExploreStore from '../context/ExploreStore'
 
 function Display ( { componentName } ) {
     const [ homeFeed, setHomeFeed ] = useState( [] )
@@ -18,7 +17,6 @@ function Display ( { componentName } ) {
     const setHomeFeed = HomepageStore( ( state ) => state.setHomeFeed ) */
     const userFollowing = HomepageStore( ( state ) => state.userFollowing )
     const setUserFollowing = HomepageStore( ( state ) => state.setUserFollowing )
-    const explorePosts = ExploreStore( ( state ) => state.explorePosts )
     const { state: { currentUser } } = useContext( AuthContext )
     const userID = currentUser.id; // the id of the user
     /* 
@@ -59,6 +57,7 @@ function Display ( { componentName } ) {
                 console.error( error )
             }
         }
+
         // clean up useEffect
         return () => {
             fetchFollowing();
@@ -81,7 +80,8 @@ function Display ( { componentName } ) {
                 <ViewProfile />
             </div> }
             { componentName === "Explore" && <div className='displayWrapper'>
-                { explorePosts.map( ( post ) => ( <ImageCard key={ post.id } post={ post } id={ post.id } /> ) ) }
+                {/*  explorePosts.map( ( post ) => ( <ImageCard key={ post.id } post={ post } id={ post.id } /> ) ) */ }
+                <ExploreDisplay />
             </div> }
         </div >
     )

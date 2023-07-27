@@ -85,7 +85,7 @@ function SearchDisplay () {
                 <div className="explore-posts">
                     { explorePosts.length > 0 && explorePosts.map( ( post, index ) => {
                         if ( ( index + 1 ) < displayLimit ) {
-                            return <img key={ post.id } id={ post.id } src={ post.photoURL } alt="" onClick={ handleExplore } ref={ idRef } />
+                            return <div key={ post.id }><img id={ post.id } src={ post.photoURL } alt="" onClick={ handleExplore } data-post-id={ post.id } ref={ idRef } /></div>
                         }
                     } ) }
                 </div>

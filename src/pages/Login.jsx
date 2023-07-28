@@ -18,7 +18,6 @@ function Login () {
         try {
             await signInWithEmailAndPassword( auth, email, password )
             navigate( "/home" )
-            location.reload()
         } catch ( error ) {
             setErr( true )
         }

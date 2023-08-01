@@ -9,13 +9,13 @@ import ProfileStore from "../context/ProfileStore"
 
 function Menu () {
     const navigate = useNavigate();
-    /* const { state: { currentUser } } = useContext( AuthContext )
-    const setProfileID = ProfileStore( ( state ) => state.setProfileID ) */
-    // const setProfileData = ProfileStore( ( state ) => state.setProfileData )
+    const { state: { currentUser } } = useContext( AuthContext )
+    /* const setProfileID = ProfileStore( ( state ) => state.setProfileID ) */
+    const setProfileData = ProfileStore( ( state ) => state.setProfileData )
     
     const handleAccount = () => {
         // setProfileID( currentUser.id )
-        // setProfileData( currentUser )
+        setProfileData( currentUser )
         navigate( "/profile" )
     }
 

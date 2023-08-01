@@ -18,7 +18,7 @@ const ProfileStore = create( ( set ) => ( {
 
 // hydrate the store from localstorage (if available) on application load
 const storedProfileID = localStorage.getItem( 'profileID' )
-// const storedProfileData = localStorage.getItem( 'profileData' )
+const storedProfileData = localStorage.getItem( 'profileData' )
 const storedPosts = localStorage.getItem( 'posts' )
 const storedFollowers = localStorage.getItem( 'followers' )
 const storedFollowing = localStorage.getItem( 'following' )
@@ -26,9 +26,9 @@ const storedFollowing = localStorage.getItem( 'following' )
 if ( storedProfileID !== "undefined" ) {
     ProfileStore.setState( { profileID: JSON.parse( storedProfileID ) } )
 }
-/* if ( storedProfileData !== null ) {
+if ( storedProfileData !== null ) {
     ProfileStore.setState( { profileData: JSON.parse( storedProfileData ) } )
-} */
+}
 if ( storedPosts !== null ) {
     ProfileStore.setState( { posts: JSON.parse( storedPosts ) } )
 }
@@ -44,10 +44,10 @@ ProfileStore.subscribe(
     ( state ) => { localStorage.setItem( 'profileID', JSON.stringify( state.profileID ) ) },
     ( state ) => state.profileID
 )
-/* ProfileStore.subscribe(
+ProfileStore.subscribe(
     ( state ) => { localStorage.setItem( 'profileData', JSON.stringify( state.profileData ) ) },
     ( state ) => state.profileData
-) */
+)
 ProfileStore.subscribe(
     ( state ) => { localStorage.setItem( 'posts', JSON.stringify( state.posts ) ) },
     ( state ) => state.posts

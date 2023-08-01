@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import Menu from '../components/Menu'
 import Back from "../assets/left-arrow.png"
@@ -7,13 +7,17 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import ProfileStore from '../context/ProfileStore'
 import { doc, getDoc } from 'firebase/firestore'
 import { db } from '../firebase'
+import PostStore from '../context/PostStore'
+import { AuthContext } from '../context/AuthContext'
 
 const ViewPost = () => {
     const [ user, setUser ] = useState( {} )
     const navigate = useNavigate();
-    const location = useLocation()
-    const post = location.state
+    /* const location = useLocation()
+    const post = location.state */
+    const post = PostStore( ( state ) => state.post )
     const setProfileID = ProfileStore( ( state ) => state.setProfileID )
+    const { state: { currentUser } } = useContext( AuthContext )
 
     useEffect( () => {
         const unsub = async () => {
@@ -27,8 +31,12 @@ const ViewPost = () => {
     }, [ post.ownerID ] )
 
     const handleBack = () => {
-        setProfileID( post.ownerID )
-        navigate( -1 )
+        if ( post.ownerID === currentUser.id ) {
+            navigate( "/profile" )
+        }
+        else {
+            navigate( -1 )
+        }
     }
 
     return (

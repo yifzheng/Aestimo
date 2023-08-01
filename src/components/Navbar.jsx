@@ -33,7 +33,7 @@ function Navbar ( { componentName } ) {
         navigate( "/login" ) // navigate to login page to preserve url
         setHomeFeed( [] )
     }
-    console.log( externalProfileData )
+    
     return (
         <div className="navbarContainer">
             { componentName === "Navbar" && <>

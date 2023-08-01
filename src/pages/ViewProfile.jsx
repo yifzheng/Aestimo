@@ -6,6 +6,7 @@ import { AuthContext } from '../context/AuthContext'
 import { arrayRemove, arrayUnion, collection, doc, onSnapshot, query, updateDoc, where } from 'firebase/firestore'
 import { db } from '../firebase'
 import ProfileStore from "../context/ProfileStore"
+import PostStore from '../context/PostStore'
 
 /* Dispaly profile data for users other than the current user */
 const ViewProfile = () => {
@@ -23,6 +24,9 @@ const ViewProfile = () => {
     const setFollowers = ProfileStore( ( state ) => state.setFollowers )
     const following = ProfileStore( ( state ) => state.following )
     const setFollowing = ProfileStore( ( state ) => state.setFollowing )
+    // <------------------------------------------------------------->
+    // <--------- RETRIEVE DATA FROM Post STORE ---------------->
+    const setPost = PostStore( ( state ) => state.setPost )
     // <------------------------------------------------------------->
     // get current user by context
     const { state: { currentUser } } = useContext( AuthContext )
@@ -83,6 +87,11 @@ const ViewProfile = () => {
         }
     }
 
+    const handleViewPost = ( doc ) => {
+        setPost( doc )
+        navigate( "/view_post" )
+    }
+
     return (
         <div className='profileContainer'>
             <div className="profile">
@@ -123,7 +132,7 @@ const ViewProfile = () => {
                         {/* <div className='saved'><img src={ Saved } alt="" onClick={ () => setIsPostFeed( false ) } /></div> */ }
                     </div>
                     { isPostFeed && <div className="userPosts">
-                        { posts.length > 0 && posts.map( ( doc ) => ( <img key={ doc.id } src={ doc.photoURL } alt="" onClick={ () => navigate( "/view_post", { state: doc } ) } /> ) ) }
+                        { posts.length > 0 && posts.map( ( doc ) => ( <img key={ doc.id } src={ doc.photoURL } alt="" onClick={ () => handleViewPost( doc ) } /> ) ) }
                     </div> }
                     {/*  !isPostFeed && <div className="userPosts">
                         <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />

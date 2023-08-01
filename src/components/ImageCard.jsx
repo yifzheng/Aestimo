@@ -28,6 +28,7 @@ function ImageCard ( { post } ) {
             setPostRef( null )
         }
         else {
+            console.log( postUser )
             setExternalProfileData( postUser )
             navigate( `/viewprofile/${postUser.userName}` )
             setPostRef( null )

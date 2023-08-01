@@ -64,7 +64,7 @@ function Display ( { componentName } ) {
             fetchAllPosts()
         }
     }, [ userFollowing ] )
-
+    
     return (
         <div className="displayContainer">
             { componentName === "ImageCard" && <div className="displayWrapper">

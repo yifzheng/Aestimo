@@ -16,7 +16,7 @@ const ViewProfile = () => {
     // <--------- RETRIEVE DATA FROM PROFILE STORE ---------------->
     // const profileID = ProfileStore( ( state ) => state.profileID );
     //const setProfileData = ProfileStore( ( state ) => state.setProfileData )
-    const externalProfileData = ProfileStore( ( state ) => state.profileData )
+    const externalProfileData = ProfileStore( ( state ) => state.externalProfileData )
     const posts = ProfileStore( ( state ) => state.posts )
     const setPosts = ProfileStore( ( state ) => state.setPosts )
     const followers = ProfileStore( ( state ) => state.followers )
@@ -28,10 +28,6 @@ const ViewProfile = () => {
     const { state: { currentUser } } = useContext( AuthContext )
 
     useEffect( () => {
-        /* const fetchUser = async () => {
-            const res = await getDoc( doc( db, "users", profileID ) )
-            setProfileData( res.data() )
-        } */
         const fetchPost = onSnapshot( query( collection( db, "posts" ), where( 'ownerID', "==", externalProfileData.id ) ),
             ( querySnapShot ) => {
                 const documents = querySnapShot.docs.map( ( doc ) => ( {

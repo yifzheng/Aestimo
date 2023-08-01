@@ -12,28 +12,28 @@ import { doc, getDoc } from 'firebase/firestore'
 import HomepageStore from '../context/HomepageStore'
 
 function Navbar ( { componentName } ) {
-    const [ user, setUser ] = useState( {} )
+    // const [ user, setUser ] = useState( {} )
     const navigate = useNavigate();
 
     // get current user from context
     const { state: { currentUser } } = useContext( AuthContext )
-    const profileID = ProfileStore( ( state ) => state.profileID )
-    //const profileData = ProfileStore( ( state ) => state.profileData )
+    // const externalProfileID = ProfileStore( ( state ) => state.externalProfileID )
+    const externalProfileData = ProfileStore( ( state ) => state.externalProfileData )
     const setHomeFeed = HomepageStore( ( state ) => state.setHomeFeed )
-    useEffect( () => {
+    /* useEffect( () => {
         const fetchUser = async () => {
-            const res = await getDoc( doc( db, "users", profileID ) )
+            const res = await getDoc( doc( db, "users", externalProfileID ) )
             setUser( res.data() )
         }
         return () => fetchUser()
-    }, [ profileID ] )
+    }, [ externalProfileID ] ) */
 
     const handleLogOut = () => {
         auth.signOut();// signout
         navigate( "/login" ) // navigate to login page to preserve url
         setHomeFeed( [] )
     }
-
+    console.log( externalProfileData )
     return (
         <div className="navbarContainer">
             { componentName === "Navbar" && <>
@@ -57,7 +57,7 @@ function Navbar ( { componentName } ) {
             </> }
             { componentName === "UserProfile" && <>
                 <div className="userName">
-                    <span className='user-name'>{ user.userName }</span>
+                    <span className='user-name'>{ externalProfileData.userName }</span>
                 </div>
                 <div className="profileMenu">
                     <img src={ Exit } alt="" onClick={ handleLogOut } />

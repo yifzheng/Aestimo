@@ -17,19 +17,18 @@ function ImageCard ( { post } ) {
     const [ postUser, setPostUser ] = useState( {} )
     const imageRef = useRef();
     const navigate = useNavigate();
-    const setProfileID = ProfileStore( ( state ) => state.setProfileID )
+    const setExternalProfileData = ProfileStore( ( state ) => state.setExternalProfileData )
     const postRef = ExploreStore( ( state ) => state.postRef )
     const setPostRef = ExploreStore( ( state ) => state.setPostRef )
     const { state: { currentUser } } = useContext( AuthContext )
 
     const handleAccount = () => {
-        setProfileID( postUser.id )
         if ( currentUser.id === postUser.id ) {
-
             navigate( "/profile" )
             setPostRef( null )
         }
         else {
+            setExternalProfileData( postUser )
             navigate( `/viewprofile/${postUser.userName}` )
             setPostRef( null )
         }

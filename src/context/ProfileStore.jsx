@@ -2,7 +2,9 @@ import { create } from "zustand";
 
 const ProfileStore = create( ( set ) => ( {
     profileID: null,
+    externalProfileID: null,
     profileData: {},
+    externalProfileData: {},
     posts: [],
     followers: [],
     following: [],
@@ -10,6 +12,8 @@ const ProfileStore = create( ( set ) => ( {
     getProfileID: () => set.profileID,
     setProfileData: ( data ) => set( ( prevState ) => ( { profileData: { ...prevState.profileData, ...data } } ) ),
     getProfileData: () => set.profileData,
+    setExternalProfileID: ( id ) => set( { profileID: id } ),
+    setExternalProfileData: ( data ) => set( ( prevState ) => ( { profileData: { ...prevState.profileData, ...data } } ) ),
     setPosts: ( data ) => set( { posts: [ ...data ] } ),
     getPosts: () => set.posts,
     setFollowers: ( data ) => set( { followers: [ ...data ] } ),
@@ -19,6 +23,8 @@ const ProfileStore = create( ( set ) => ( {
 // hydrate the store from localstorage (if available) on application load
 const storedProfileID = localStorage.getItem( 'profileID' )
 const storedProfileData = localStorage.getItem( 'profileData' )
+const storedExternalProfileID = localStorage.getItem( 'externalProfileID' )
+const storedExternalProfileData = localStorage.getItem( 'externalProfileData' )
 const storedPosts = localStorage.getItem( 'posts' )
 const storedFollowers = localStorage.getItem( 'followers' )
 const storedFollowing = localStorage.getItem( 'following' )
@@ -28,6 +34,12 @@ if ( storedProfileID !== "undefined" ) {
 }
 if ( storedProfileData !== null ) {
     ProfileStore.setState( { profileData: JSON.parse( storedProfileData ) } )
+}
+if ( storedExternalProfileID !== "undefined" ) {
+    ProfileStore.setState( { externalProfileID: JSON.parse( storedExternalProfileID ) } )
+}
+if ( storedExternalProfileData !== null ) {
+    ProfileStore.setState( { externalProfileData: JSON.parse( storedExternalProfileData ) } )
 }
 if ( storedPosts !== null ) {
     ProfileStore.setState( { posts: JSON.parse( storedPosts ) } )
@@ -47,6 +59,14 @@ ProfileStore.subscribe(
 ProfileStore.subscribe(
     ( state ) => { localStorage.setItem( 'profileData', JSON.stringify( state.profileData ) ) },
     ( state ) => state.profileData
+)
+ProfileStore.subscribe(
+    ( state ) => { localStorage.setItem( 'externalProfileID', JSON.stringify( state.externalProfileID ) ) },
+    ( state ) => state.externalProfileID
+)
+ProfileStore.subscribe(
+    ( state ) => { localStorage.setItem( 'externalProfileData', JSON.stringify( state.externalProfileData ) ) },
+    ( state ) => state.externalProfileData
 )
 ProfileStore.subscribe(
     ( state ) => { localStorage.setItem( 'posts', JSON.stringify( state.posts ) ) },

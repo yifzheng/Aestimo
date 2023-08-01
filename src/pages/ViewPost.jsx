@@ -11,18 +11,19 @@ import PostStore from '../context/PostStore'
 import { AuthContext } from '../context/AuthContext'
 
 const ViewPost = () => {
-    const [ user, setUser ] = useState( {} )
+    // const [ user, setUser ] = useState( {} )
     const navigate = useNavigate();
     /* const location = useLocation()
     const post = location.state */
     const post = PostStore( ( state ) => state.post )
-    const setProfileID = ProfileStore( ( state ) => state.setProfileID )
+    const postOwner = PostStore( ( state ) => state.postOwner )
+    const setPostOwner = PostStore( ( state ) => state.setPostOwner )
     const { state: { currentUser } } = useContext( AuthContext )
 
     useEffect( () => {
         const unsub = async () => {
             const res = await getDoc( doc( db, "users", post.ownerID ) )
-            setUser( res.data() )
+            setPostOwner( res.data() )
         }
         // clean up
         return () => {
@@ -38,20 +39,20 @@ const ViewPost = () => {
             navigate( -1 )
         }
     }
-
+    console.log( postOwner )
     return (
         <div className='page background-fit'>
             <div className="container app-border">
                 <div className='nav'>
                     <img src={ Back } alt="" onClick={ handleBack } />
                     <div className="title">
-                        <span className='user-name'>{ user && user.userName }</span>
+                        <span className='user-name'>{ postOwner && postOwner.userName }</span>
                         <span className='post'>Posts</span>
                     </div>
                 </div>
                 <div className="displayContainer">
                     <div className="displayWrapper">
-                        <ImageCard post={ post } />
+                        <ImageCard post={ post } postOwner={ postOwner } />
                     </div>
                 </div>
                 <Menu />

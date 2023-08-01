@@ -2,7 +2,9 @@ import { create } from "zustand";
 
 const PostStore = create( ( set ) => ( {
     post: {},
-    setPost: ( postData ) => set( ( { post: { ...postData } } ) )
+    postOwner: {},
+    setPost: ( postData ) => set( { post: { ...postData } } ),
+    setPostOwner: ( postOwnerData ) => set( { postOwner: { ...postOwnerData } } )
 } ) )
 
 /* // check if there is data stored in local storage

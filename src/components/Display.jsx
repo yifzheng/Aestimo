@@ -64,11 +64,11 @@ function Display ( { componentName } ) {
             fetchAllPosts()
         }
     }, [ userFollowing ] )
-    
+
     return (
         <div className="displayContainer">
             { componentName === "ImageCard" && <div className="displayWrapper">
-                { homeFeed.length > 0 && homeFeed.map( ( post ) => ( <ImageCard key={ post.id } post={ post } /> ) ) }
+                { homeFeed.length > 0 && homeFeed.map( ( post ) => ( <ImageCard key={ post.id } post={ post } postOwner={ post.user } /> ) ) }
             </div> }
             { componentName === "SearchDisplay" && <div className='searchWrapper'>
                 <SearchDisplay />

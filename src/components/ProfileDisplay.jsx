@@ -11,15 +11,16 @@ import { collection, doc, getDoc, onSnapshot, query, where } from 'firebase/fire
 import { db } from '../firebase'
 import ProfileStore from "../context/ProfileStore"
 
+/* Display user profile of current logged in user */
 const ProfileDisplay = () => {
     // const [ posts, setPosts ] = useState( [] )
     // const [ profileData, setProfileData ] = useState( [] )
     const [ isPostFeed, setIsPostFeed ] = useState( true )
     const navigate = useNavigate();
     // <--------- RETRIEVE DATA FROM PROFILE STORE ---------------->
-    const profileID = ProfileStore( ( state ) => state.profileID );
+    /* const profileID = ProfileStore( ( state ) => state.profileID );
     const setProfileData = ProfileStore( ( state ) => state.setProfileData )
-    const profileData = ProfileStore( ( state ) => state.profileData )
+    const profileData = ProfileStore( ( state ) => state.profileData ) */
     const posts = ProfileStore( ( state ) => state.posts )
     const setPosts = ProfileStore( ( state ) => state.setPosts )
     const followers = ProfileStore( ( state ) => state.followers )
@@ -31,11 +32,7 @@ const ProfileDisplay = () => {
     const { state: { currentUser } } = useContext( AuthContext )
 
     useEffect( () => {
-        const fetchUser = async () => {
-            const res = await getDoc( doc( db, "users", profileID ) )
-            setProfileData( res.data() )
-        }
-        const fetchPost = onSnapshot( query( collection( db, "posts" ), where( 'ownerID', "==", profileID ) ),
+        const fetchPost = onSnapshot( query( collection( db, "posts" ), where( 'ownerID', "==", currentUser.id ) ),
             ( querySnapShot ) => {
                 const documents = querySnapShot.docs.map( ( doc ) => ( {
                     id: doc.id,
@@ -44,13 +41,13 @@ const ProfileDisplay = () => {
                 setPosts( documents )
             }
         )
-        const fetchFollowers = onSnapshot( doc( db, "followers", profileID ), ( docSnapshot ) => {
+        const fetchFollowers = onSnapshot( doc( db, "followers", currentUser.id ), ( docSnapshot ) => {
             if ( docSnapshot.exists() ) {
                 setFollowers( docSnapshot.data().followers )
             }
         } )
 
-        const fetchFollowing = onSnapshot( doc( db, "following", profileID ), ( docSnapshot ) => {
+        const fetchFollowing = onSnapshot( doc( db, "following", currentUser.id ), ( docSnapshot ) => {
             if ( docSnapshot.exists() ) {
                 setFollowing( docSnapshot.data().following )
             }
@@ -58,19 +55,18 @@ const ProfileDisplay = () => {
 
         // clean up
         return () => {
-            fetchUser()
             fetchPost()
             fetchFollowers()
             fetchFollowing()
         }
-    }, [ profileID ] )
+    }, [ currentUser.id ] )
 
     return (
         <div className='profileContainer'>
             <div className="profile">
                 <div className="profileInfo">
                     <div className="imgContainer">
-                        <img src={ profileData.photoURL ? profileData.photoURL : Blank } alt="" />
+                        <img src={ currentUser.photoURL ? currentUser.photoURL : Blank } alt="" />
                     </div>
 
                     <div className="profileData">
@@ -89,8 +85,8 @@ const ProfileDisplay = () => {
                     </div>
                 </div>
                 <div className="profileBio">
-                    <span>{ `${profileData.firstName} ${profileData.lastName}` }</span>
-                    <span className='description'>{ profileData.caption }</span>
+                    <span>{ `${currentUser.firstName} ${currentUser.lastName}` }</span>
+                    <span className='description'>{ currentUser.caption }</span>
                 </div>
                 <br />
                 <div className="line-break"></div>

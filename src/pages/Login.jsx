@@ -17,7 +17,7 @@ function Login () {
         // try to login with form data
         try {
             await signInWithEmailAndPassword( auth, email, password )
-            setTimeout( () => navigate( "/home" ), 1000 )
+            setTimeout( () => navigate( "/home" ), 1500 )
         } catch ( error ) {
             setErr( true )
         }

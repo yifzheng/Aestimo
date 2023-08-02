@@ -68,6 +68,7 @@ const ProfileDisplay = () => {
     const handleViewPost = ( doc ) => {
         setPost( doc )
         navigate( "/view_post" )
+        location.reload()
     }
 
     return (

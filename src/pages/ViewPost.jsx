@@ -29,7 +29,7 @@ const ViewPost = () => {
         return () => {
             unsub();
         }
-    }, [ post.ownerID ] )
+    }, [post, setPostOwner] )
 
     const handleBack = () => {
         if ( post.ownerID === currentUser.id ) {

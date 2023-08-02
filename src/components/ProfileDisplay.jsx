@@ -67,8 +67,7 @@ const ProfileDisplay = () => {
 
     const handleViewPost = ( doc ) => {
         setPost( doc )
-        navigate( "/view_post" )
-        location.reload()
+        setTimeout( () => navigate( "/view_post" ), 1500 )
     }
 
     return (

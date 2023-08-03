@@ -70,6 +70,8 @@ const ProfileDisplay = () => {
         setPost( doc )
         setPostOwner( currentUser )
         navigate( "/view_post" )
+        navigate( "/profile" )
+        navigate( "/view_post" )
     }
 
     return (

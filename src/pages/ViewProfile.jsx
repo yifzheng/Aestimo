@@ -91,6 +91,8 @@ const ViewProfile = () => {
     const handleViewPost = ( doc ) => {
         setPost( doc )
         setPostOwner( externalProfileData )
+        navigate( '/view_post' )
+        navigate( `/view_profile/${externalProfileData.userName}` )
         navigate( "/view_post" )
     }
 

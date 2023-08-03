@@ -29,7 +29,7 @@ function ImageCard ( { post, postOwner } ) {
         else {
             console.log( postUser )
             setExternalProfileData( postOwner )
-            navigate( `/viewprofile/${postOwner.userName}` )
+            navigate( `/view_profile/${postOwner.userName}` )
         }
     }
 

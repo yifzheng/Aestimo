@@ -27,6 +27,7 @@ const ViewProfile = () => {
     // <------------------------------------------------------------->
     // <--------- RETRIEVE DATA FROM Post STORE ---------------->
     const setPost = PostStore( ( state ) => state.setPost )
+    const setPostOwner = PostStore( ( state ) => state.setPostOwner )
     // <------------------------------------------------------------->
     // get current user by context
     const { state: { currentUser } } = useContext( AuthContext )
@@ -89,7 +90,8 @@ const ViewProfile = () => {
 
     const handleViewPost = ( doc ) => {
         setPost( doc )
-        setTimeout( () => navigate( "/view_post" ), 1500 )
+        setPostOwner( externalProfileData )
+        navigate( "/view_post" )
     }
 
     return (

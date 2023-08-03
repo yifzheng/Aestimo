@@ -2,23 +2,28 @@ import React, { useEffect } from 'react'
 import ExploreStore from '../context/ExploreStore'
 import ImageCard from './ImageCard'
 import Lily from "../assets/orange-lily.jpg"
+import PostStore from '../context/PostStore'
+import { doc, getDoc } from 'firebase/firestore'
+import { db } from '../firebase'
 
 const ExploreDisplay = () => {
-    const explorePosts = ExploreStore( ( state ) => state.explorePosts )
-    const postRef = ExploreStore( ( state ) => state.postRef )
+    const post = PostStore( ( state ) => state.post )
+    const postOwner = PostStore( ( state ) => state.postOwner )
+    const setPostOwner = PostStore( ( state ) => state.setPostOwner )
 
     useEffect( () => {
-        const targetPost = document.querySelector( `[data-post-id="${postRef}"]` )
-        if ( targetPost ) {
-            targetPost.scrollIntoView( { behavior: 'smooth', block: 'start' } )
+        const unsub = async () => {
+            const res = await getDoc( doc( db, "users", post.ownerID ) )
+            setPostOwner( res.data() )
         }
-    }, [ postRef ] )
+        return () => {
+            unsub()
+        }
+    }, [ post ] )
 
     return (
         <div>
-            { explorePosts.map( ( post ) => ( <div key={ post.id }>
-                <ImageCard post={ post } data-post-id={ post.id } />
-            </div> ) ) }
+            <ImageCard post={ post } postOwner={ postOwner } />
         </div>
     )
 }

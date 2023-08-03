@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar'
 import Menu from '../components/Menu'
 import Back from "../assets/left-arrow.png"
 import ImageCard from '../components/ImageCard'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import ProfileStore from '../context/ProfileStore'
 import { doc, getDoc } from 'firebase/firestore'
 import { db } from '../firebase'
@@ -17,10 +17,10 @@ const ViewPost = () => {
     const post = location.state */
     const post = PostStore( ( state ) => state.post )
     const postOwner = PostStore( ( state ) => state.postOwner )
-    const setPostOwner = PostStore( ( state ) => state.setPostOwner )
+    // const setPostOwner = PostStore( ( state ) => state.setPostOwner )
     const { state: { currentUser } } = useContext( AuthContext )
 
-    useEffect( () => {
+    /* useEffect( () => {
         const unsub = async () => {
             const res = await getDoc( doc( db, "users", post.ownerID ) )
             setPostOwner( res.data() )
@@ -29,7 +29,7 @@ const ViewPost = () => {
         return () => {
             unsub();
         }
-    }, [post, setPostOwner] )
+    }, [ post, setPostOwner ] ) */
 
     const handleBack = () => {
         if ( post.ownerID === currentUser.id ) {
@@ -39,7 +39,7 @@ const ViewPost = () => {
             navigate( -1 )
         }
     }
-    console.log( postOwner )
+    
     return (
         <div className='page background-fit'>
             <div className="container app-border">

@@ -21,9 +21,9 @@ function App () {
     <BrowserRouter>
       <Routes>
         <Route path="/">
-          <Route index element={ <Start /> } />
-          <Route path="login" element={ <Login /> } />
-          <Route path="register" element={ <Register /> } />
+          <Route index element={ Object.entries( currentUser ).length > 0 ? <Home /> : <Start /> } />
+          <Route path="login" element={ Object.entries( currentUser ).length > 0 ? <Home /> : <Login /> } />
+          <Route path="register" element={ Object.entries( currentUser ).length > 0 ? <Home /> : <Register /> } />
           {/*<---------- Protected Routes: Can only be accessed if logged in ---------------> */ }
           <Route path="create" element={ Object.entries( currentUser ).length > 0 ? <Create /> : <Login /> } />
           <Route path="search" element={ Object.entries( currentUser ).length > 0 ? <Search /> : <Login /> } />

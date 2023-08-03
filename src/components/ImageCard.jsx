@@ -11,35 +11,33 @@ import ProfileStore from '../context/ProfileStore'
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
 import ExploreStore from '../context/ExploreStore'
+import PostStore from '../context/PostStore'
 
-function ImageCard ( { post } ) {
+function ImageCard ( { post, postOwner } ) {
     const [ postData, setPostData ] = useState( null )
     const [ postUser, setPostUser ] = useState( {} )
     const imageRef = useRef();
     const navigate = useNavigate();
-    const setProfileID = ProfileStore( ( state ) => state.setProfileID )
-    const postRef = ExploreStore( ( state ) => state.postRef )
-    const setPostRef = ExploreStore( ( state ) => state.setPostRef )
+    const setExternalProfileData = ProfileStore( ( state ) => state.setExternalProfileData )
+    
     const { state: { currentUser } } = useContext( AuthContext )
 
     const handleAccount = () => {
-        setProfileID( postUser.id )
         if ( currentUser.id === postUser.id ) {
-
             navigate( "/profile" )
-            setPostRef( null )
         }
         else {
-            navigate( `/viewprofile/${postUser.userName}` )
-            setPostRef( null )
+            console.log( postUser )
+            setExternalProfileData( postOwner )
+            navigate( `/viewprofile/${postOwner.userName}` )
         }
     }
 
     useEffect( () => {
-        const fetchUser = async () => {
+        /* const fetchUser = async () => {
             const res = await getDoc( doc( db, "users", post.ownerID ) )
             setPostUser( res.data() )
-        }
+        } */
         const fetchDoc = onSnapshot( doc( db, "posts", post.id ), ( docSnapshot ) => {
             if ( docSnapshot.exists() ) {
                 setPostData( { id: docSnapshot.id, ...docSnapshot.data() } )
@@ -48,16 +46,12 @@ function ImageCard ( { post } ) {
                 setPostData( null )
             }
         } )
-        const targetPost = document.getElementById( postRef )
-        if ( targetPost ) {
-            console.log( targetPost )
-            targetPost.scrollIntoView( { behavior: 'smooth', block: 'start' } )
-        }
+
         return () => {
-            fetchUser()
+            // fetchUser()
             fetchDoc()
         }
-    }, [ post, postRef ] )
+    }, [ post ] )
 
     // when the post is unliked, user can click the empty heart to like and the heart will be red
     // if the post is liked by the user, red heart will become blank and the user will unlike the post
@@ -85,9 +79,9 @@ function ImageCard ( { post } ) {
     return (
         <div className='cardContainer'>
             <div className="userWrapper">
-                <img src={ postUser.photoURL ? postUser.photoURL : Blank } alt='' />
+                <img src={ postOwner.photoURL ? postOwner.photoURL : Blank } alt='' />
                 <div className='info'>
-                    <span onClick={ handleAccount }>{ postUser.userName }</span>
+                    <span onClick={ handleAccount }>{ postOwner.userName }</span>
                     {/* <span className='location'>Your Imagination</span> */ }
                 </div>
             </div>

@@ -10,6 +10,7 @@ import { AuthContext } from '../context/AuthContext'
 import { collection, doc, getDoc, onSnapshot, query, where } from 'firebase/firestore'
 import { db } from '../firebase'
 import ProfileStore from "../context/ProfileStore"
+import PostStore from '../context/PostStore'
 
 /* Display user profile of current logged in user */
 const ProfileDisplay = () => {
@@ -19,8 +20,8 @@ const ProfileDisplay = () => {
     const navigate = useNavigate();
     // <--------- RETRIEVE DATA FROM PROFILE STORE ---------------->
     /* const profileID = ProfileStore( ( state ) => state.profileID );
-    const setProfileData = ProfileStore( ( state ) => state.setProfileData )
-    const profileData = ProfileStore( ( state ) => state.profileData ) */
+    const setProfileData = ProfileStore( ( state ) => state.setProfileData ) */
+    const profileData = ProfileStore( ( state ) => state.profileData )
     const posts = ProfileStore( ( state ) => state.posts )
     const setPosts = ProfileStore( ( state ) => state.setPosts )
     const followers = ProfileStore( ( state ) => state.followers )
@@ -28,11 +29,15 @@ const ProfileDisplay = () => {
     const following = ProfileStore( ( state ) => state.following )
     const setFollowing = ProfileStore( ( state ) => state.setFollowing )
     // <------------------------------------------------------------->
+    // <--------- RETRIEVE DATA FROM Post STORE ---------------->
+    const setPost = PostStore( ( state ) => state.setPost )
+    const setPostOwner = PostStore( ( state ) => state.setPostOwner )
+    // <------------------------------------------------------------->
     // get current user by context
     const { state: { currentUser } } = useContext( AuthContext )
 
     useEffect( () => {
-        const fetchPost = onSnapshot( query( collection( db, "posts" ), where( 'ownerID', "==", currentUser.id ) ),
+        const fetchPost = onSnapshot( query( collection( db, "posts" ), where( 'ownerID', "==", profileData.id ) ),
             ( querySnapShot ) => {
                 const documents = querySnapShot.docs.map( ( doc ) => ( {
                     id: doc.id,
@@ -41,13 +46,13 @@ const ProfileDisplay = () => {
                 setPosts( documents )
             }
         )
-        const fetchFollowers = onSnapshot( doc( db, "followers", currentUser.id ), ( docSnapshot ) => {
+        const fetchFollowers = onSnapshot( doc( db, "followers", profileData.id ), ( docSnapshot ) => {
             if ( docSnapshot.exists() ) {
                 setFollowers( docSnapshot.data().followers )
             }
         } )
 
-        const fetchFollowing = onSnapshot( doc( db, "following", currentUser.id ), ( docSnapshot ) => {
+        const fetchFollowing = onSnapshot( doc( db, "following", profileData.id ), ( docSnapshot ) => {
             if ( docSnapshot.exists() ) {
                 setFollowing( docSnapshot.data().following )
             }
@@ -59,14 +64,20 @@ const ProfileDisplay = () => {
             fetchFollowers()
             fetchFollowing()
         }
-    }, [ currentUser.id ] )
+    }, [ profileData ] )
+
+    const handleViewPost = ( doc ) => {
+        setPost( doc )
+        setPostOwner( currentUser )
+        navigate( "/view_post" )
+    }
 
     return (
         <div className='profileContainer'>
             <div className="profile">
                 <div className="profileInfo">
                     <div className="imgContainer">
-                        <img src={ currentUser.photoURL ? currentUser.photoURL : Blank } alt="" />
+                        <img src={ profileData.photoURL ? profileData.photoURL : Blank } alt="" />
                     </div>
 
                     <div className="profileData">
@@ -85,8 +96,8 @@ const ProfileDisplay = () => {
                     </div>
                 </div>
                 <div className="profileBio">
-                    <span>{ `${currentUser.firstName} ${currentUser.lastName}` }</span>
-                    <span className='description'>{ currentUser.caption }</span>
+                    <span>{ `${profileData.firstName} ${profileData.lastName}` }</span>
+                    <span className='description'>{ profileData.caption }</span>
                 </div>
                 <br />
                 <div className="line-break"></div>
@@ -97,7 +108,7 @@ const ProfileDisplay = () => {
                         {/* <div className='saved'><img src={ Saved } alt="" onClick={ () => setIsPostFeed( false ) } /></div> */ }
                     </div>
                     { isPostFeed && <div className="userPosts">
-                        { posts.length > 0 && posts.map( ( doc ) => ( <img key={ doc.id } src={ doc.photoURL } alt="" onClick={ () => navigate( "/view_post", { state: doc } ) } /> ) ) }
+                        { posts.length > 0 && posts.map( ( doc ) => ( <img key={ doc.id } src={ doc.photoURL } alt="" onClick={ () => handleViewPost( doc ) } /> ) ) }
                     </div> }
                     {/*  !isPostFeed && <div className="userPosts">
                         <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />

@@ -1,25 +1,23 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Blank from "../assets/blank.png"
 import Feed from "../assets/feed.png"
-import Saved from "../assets/save.png"
-import Lily from "../assets/orange-lily.jpg"
-import Follow from "../assets/follow.png"
-import Following from "../assets/following.png"
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
-import { arrayRemove, arrayUnion, collection, doc, getDoc, onSnapshot, query, updateDoc, where } from 'firebase/firestore'
+import { arrayRemove, arrayUnion, collection, doc, onSnapshot, query, updateDoc, where } from 'firebase/firestore'
 import { db } from '../firebase'
 import ProfileStore from "../context/ProfileStore"
+import PostStore from '../context/PostStore'
 
+/* Dispaly profile data for users other than the current user */
 const ViewProfile = () => {
     // const [ posts, setPosts ] = useState( [] )
-    const [ profileData, setProfileData ] = useState( [] )
+    // const [ profileData, setProfileData ] = useState( [] )
     const [ isPostFeed, setIsPostFeed ] = useState( true )
     const navigate = useNavigate();
     // <--------- RETRIEVE DATA FROM PROFILE STORE ---------------->
-    const profileID = ProfileStore( ( state ) => state.profileID );
+    // const profileID = ProfileStore( ( state ) => state.profileID );
     //const setProfileData = ProfileStore( ( state ) => state.setProfileData )
-    // const profileData = ProfileStore( ( state ) => state.profileData )
+    const externalProfileData = ProfileStore( ( state ) => state.externalProfileData )
     const posts = ProfileStore( ( state ) => state.posts )
     const setPosts = ProfileStore( ( state ) => state.setPosts )
     const followers = ProfileStore( ( state ) => state.followers )
@@ -27,15 +25,15 @@ const ViewProfile = () => {
     const following = ProfileStore( ( state ) => state.following )
     const setFollowing = ProfileStore( ( state ) => state.setFollowing )
     // <------------------------------------------------------------->
+    // <--------- RETRIEVE DATA FROM Post STORE ---------------->
+    const setPost = PostStore( ( state ) => state.setPost )
+    const setPostOwner = PostStore( ( state ) => state.setPostOwner )
+    // <------------------------------------------------------------->
     // get current user by context
     const { state: { currentUser } } = useContext( AuthContext )
 
     useEffect( () => {
-        const fetchUser = async () => {
-            const res = await getDoc( doc( db, "users", profileID ) )
-            setProfileData( res.data() )
-        }
-        const fetchPost = onSnapshot( query( collection( db, "posts" ), where( 'ownerID', "==", profileID ) ),
+        const fetchPost = onSnapshot( query( collection( db, "posts" ), where( 'ownerID', "==", externalProfileData.id ) ),
             ( querySnapShot ) => {
                 const documents = querySnapShot.docs.map( ( doc ) => ( {
                     id: doc.id,
@@ -44,13 +42,13 @@ const ViewProfile = () => {
                 setPosts( documents )
             }
         )
-        const fetchFollowers = onSnapshot( doc( db, "followers", profileID ), ( docSnapshot ) => {
+        const fetchFollowers = onSnapshot( doc( db, "followers", externalProfileData.id ), ( docSnapshot ) => {
             if ( docSnapshot.exists() ) {
                 setFollowers( docSnapshot.data().followers )
             }
         } )
 
-        const fetchFollowing = onSnapshot( doc( db, "following", profileID ), ( docSnapshot ) => {
+        const fetchFollowing = onSnapshot( doc( db, "following", externalProfileData.id ), ( docSnapshot ) => {
             if ( docSnapshot.exists() ) {
                 setFollowing( docSnapshot.data().following )
             }
@@ -58,36 +56,42 @@ const ViewProfile = () => {
 
         // clean up
         return () => {
-            fetchUser()
+            // fetchUser()
             fetchPost()
             fetchFollowers()
             fetchFollowing()
         }
-    }, [ profileID ] )
+    }, [ externalProfileData ] )
 
     // function to handle the follow status of user
     const handleFollow = async () => {
         const currentUserID = currentUser.id;
         if ( followers.includes( currentUser.id ) ) {
             // if the current profile contains the current user's id, remove it to unfollow
-            await updateDoc( doc( db, "followers", profileID ), {
+            await updateDoc( doc( db, "followers", externalProfileData.id ), {
                 followers: arrayRemove( currentUser )
             } )
             // remove the current profile Id from current users list of people following
             await updateDoc( doc( db, "following", currentUserID ), {
-                following: arrayRemove( profileData )
+                following: arrayRemove( externalProfileData )
             } )
         }
         else {
             // not following so add user Id to the current profiles list of followers
-            await updateDoc( doc( db, "followers", profileID ), {
+            await updateDoc( doc( db, "followers", externalProfileData.id ), {
                 followers: arrayUnion( currentUser )
             } )
             // add the current profile Id from current users list of people following
             await updateDoc( doc( db, "following", currentUserID ), {
-                following: arrayUnion( profileData )
+                following: arrayUnion( externalProfileData )
             } )
         }
+    }
+
+    const handleViewPost = ( doc ) => {
+        setPost( doc )
+        setPostOwner( externalProfileData )
+        navigate( "/view_post" )
     }
 
     return (
@@ -95,7 +99,7 @@ const ViewProfile = () => {
             <div className="profile">
                 <div className="profileInfo">
                     <div className="imgContainer">
-                        <img src={ profileData.photoURL ? profileData.photoURL : Blank } alt="" />
+                        <img src={ externalProfileData.photoURL ? externalProfileData.photoURL : Blank } alt="" />
                     </div>
 
                     <div className="profileData">
@@ -114,8 +118,8 @@ const ViewProfile = () => {
                     </div>
                 </div>
                 <div className="profileBio">
-                    <span>{ `${profileData.firstName} ${profileData.lastName}` }</span>
-                    <span className='description'>{ profileData.caption }</span>
+                    <span>{ `${externalProfileData.firstName} ${externalProfileData.lastName}` }</span>
+                    <span className='description'>{ externalProfileData.caption }</span>
                 </div>
                 <br />
                 { /* profileID !== currentUser.id && <label><img src={ isFollowing ? Following : Follow } alt="" onClick={ () => setIsFollowing( !isFollowing ) } /></label> */ }
@@ -130,7 +134,7 @@ const ViewProfile = () => {
                         {/* <div className='saved'><img src={ Saved } alt="" onClick={ () => setIsPostFeed( false ) } /></div> */ }
                     </div>
                     { isPostFeed && <div className="userPosts">
-                        { posts.length > 0 && posts.map( ( doc ) => ( <img key={ doc.id } src={ doc.photoURL } alt="" onClick={ () => navigate( "/view_post", { state: doc } ) } /> ) ) }
+                        { posts.length > 0 && posts.map( ( doc ) => ( <img key={ doc.id } src={ doc.photoURL } alt="" onClick={ () => handleViewPost( doc ) } /> ) ) }
                     </div> }
                     {/*  !isPostFeed && <div className="userPosts">
                         <img src={ Lily } alt="" onClick={ () => navigate( "/view_post" ) } />

@@ -8,6 +8,7 @@ import { collection, getDocs, onSnapshot, query, where } from 'firebase/firestor
 import { db } from '../firebase'
 import { AuthContext } from '../context/AuthContext'
 import ExploreStore from '../context/ExploreStore'
+import PostStore from '../context/PostStore'
 
 function SearchDisplay () {
     const [ searchContent, setSearchContent ] = useState( "" )
@@ -19,8 +20,7 @@ function SearchDisplay () {
     const { state: { currentUser } } = useContext( AuthContext )
     const explorePosts = ExploreStore( ( state ) => state.explorePosts )
     const setExplorePosts = ExploreStore( ( state ) => state.setExplorePosts )
-    const setPostRef = ExploreStore( ( state ) => state.setPostRef )
-    const idRef = useRef()
+    const setPost = PostStore( ( state ) => state.setPost )
 
     // get all posts that isn't the users adn sort by creation date
     useEffect( () => {
@@ -65,9 +65,8 @@ function SearchDisplay () {
         setSearchContent( "" )
     }
 
-    const handleExplore = () => {
-        const imageID = idRef.current.id
-        setPostRef( imageID )
+    const handleExplore = ( post ) => {
+        setPost( post )
         navigate( '/explore' )
     }
 
@@ -85,7 +84,7 @@ function SearchDisplay () {
                 <div className="explore-posts">
                     { explorePosts.length > 0 && explorePosts.map( ( post, index ) => {
                         if ( ( index + 1 ) < displayLimit ) {
-                            return <div key={ post.id }><img id={ post.id } src={ post.photoURL } alt="" onClick={ handleExplore } data-post-id={ post.id } ref={ idRef } /></div>
+                            return <div key={ post.id }><img id={ post.id } src={ post.photoURL } alt="" onClick={ () => handleExplore( post ) } data-post-id={ post.id } /></div>
                         }
                     } ) }
                 </div>

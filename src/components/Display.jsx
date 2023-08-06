@@ -13,6 +13,7 @@ import ExploreDisplay from './ExploreDisplay'
 
 function Display ( { componentName } ) {
     const [ homeFeed, setHomeFeed ] = useState( [] )
+    const [ loading, setLoading ] = useState( true )
     /* const homeFeed = HomepageStore( ( state ) => state.homeFeed )
     const setHomeFeed = HomepageStore( ( state ) => state.setHomeFeed ) */
     const userFollowing = HomepageStore( ( state ) => state.userFollowing )
@@ -55,6 +56,7 @@ function Display ( { componentName } ) {
                 setHomeFeed( newArray )
             } catch ( error ) {
                 console.error( error )
+                setLoading( true )
             }
         }
 
@@ -62,8 +64,13 @@ function Display ( { componentName } ) {
         return () => {
             fetchFollowing();
             fetchAllPosts()
+            setLoading( false )
         }
-    }, [ userFollowing ] )
+    }, [ userFollowing, userID ] )
+
+    if ( loading ) {
+        return <h1>LOADING</h1>
+    }
 
     return (
         <div className="displayContainer">

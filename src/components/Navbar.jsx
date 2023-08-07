@@ -30,7 +30,7 @@ function Navbar ( { componentName } ) {
 
     const handleLogOut = () => {
         signOut( auth )
-        navigate( "/" ) // navigate to start page
+        navigate( "/login" ) // navigate to start page
         location.reload()
         setHomeFeed( [] )
     }

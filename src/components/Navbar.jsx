@@ -30,10 +30,10 @@ function Navbar ( { componentName } ) {
 
     const handleLogOut = () => {
         auth.signOut();// signout
-        navigate( "/login" ) // navigate to login page to preserve url
+        setTimeout( () => navigate( "/" ), 1500 ) // navigate to login page to preserve url
         setHomeFeed( [] )
     }
-    
+
     return (
         <div className="navbarContainer">
             { componentName === "Navbar" && <>

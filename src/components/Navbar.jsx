@@ -29,10 +29,9 @@ function Navbar ( { componentName } ) {
     }, [ externalProfileID ] ) */
 
     const handleLogOut = () => {
-        signOut( auth ).then( () => {
-            setTimeout( () => navigate( "/" ), 1500 ) // navigate to start page
-            location.reload()
-        } )
+        signOut( auth )
+        navigate( "/" ) // navigate to start page
+        location.reload()
         setHomeFeed( [] )
     }
 
